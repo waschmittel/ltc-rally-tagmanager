@@ -129,6 +129,7 @@ public final class UI extends Application {
                 currentReaderThread.join(); // this will block the UI, but it should not take longer than a second
             } catch (InterruptedException e) {
                 addErrorMessage("I've been interrupted. This is weird.");
+                Thread.currentThread().interrupt();
             }
             addMessage("Current Reader stopped.");
         }
@@ -169,9 +170,8 @@ public final class UI extends Application {
                 } else {
                     if (message.message.length() > 20) {
                         for (Node cell : getChildren()) {
-                            if (cell instanceof Labeled) {
-                                Labeled lCell = (Labeled) cell;
-                                lCell.setTextFill(message.type.color);
+                            if (cell instanceof Labeled labeledCell) {
+                                labeledCell.setTextFill(message.type.color);
                             }
                         }
                     }
@@ -234,22 +234,20 @@ public final class UI extends Application {
     }
 
     public static AssignmentInformation getAssignmentInformation() throws NumberFormatException {
-        AssignmentInformation assignmentInformation = new AssignmentInformation();
-        assignmentInformation.runnerNumber = Long.valueOf(INSTANCE.nextRunnerNumber.getText().trim());
-        assignmentInformation.overwrite = INSTANCE.overwrite.isSelected();
-        return assignmentInformation;
+        return new AssignmentInformation(
+                Long.valueOf(INSTANCE.nextRunnerNumber.getText().trim()),
+                INSTANCE.overwrite.isSelected());
     }
 
     public static void setNextRunnerNumber(long next) {
-        Platform.runLater(() -> {
-            INSTANCE.nextRunnerNumber.setText(String.valueOf(next));
-        });
+        Platform.runLater(() ->
+                INSTANCE.nextRunnerNumber.setText(String.valueOf(next)));
     }
 
     public static void setLastRunner(RunnerDto runner) {
         Platform.runLater(() -> {
-            INSTANCE.runnerName.setText(runner.name);
-            INSTANCE.runnerNumber.setText(String.valueOf(runner.id));
+            INSTANCE.runnerName.setText(runner.name());
+            INSTANCE.runnerNumber.setText(String.valueOf(runner.id()));
         });
     }
 }
