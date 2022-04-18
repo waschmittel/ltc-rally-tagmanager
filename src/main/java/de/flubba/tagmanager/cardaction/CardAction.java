@@ -22,8 +22,7 @@ public abstract class CardAction {
         if (entity instanceof InputStream inputStream) {
             try {
                 return ("Error: " + IOUtils.toString(inputStream, UTF_8));
-            }
-            catch (IOException ioException) {
+            } catch (IOException ioException) {
                 // can be empty because the error message is returned anyway
             }
         }

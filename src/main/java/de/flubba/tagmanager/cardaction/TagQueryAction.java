@@ -15,8 +15,7 @@ public class TagQueryAction extends CardAction {
             target = target.queryParam("tagId", tagId);
             TagAssignment assignment = target.request().get(TagAssignment.class);
             UI.addMessage(String.format("Tag %s is assigned to runner %s", assignment.tagId, assignment.runnerId));
-        }
-        catch (WebApplicationException e) {
+        } catch (WebApplicationException e) {
             UI.addErrorMessage(getErrorMessageFrom(e));
         }
     }

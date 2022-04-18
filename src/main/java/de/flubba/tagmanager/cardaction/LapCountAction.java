@@ -17,11 +17,9 @@ public class LapCountAction extends CardAction {
             RunnerDto runner = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
             UI.addMessage(String.format("Lap counted for %s (%s)", runner.name, runner.id));
             UI.setLastRunner(runner);
-        }
-        catch (WebApplicationException e) {
+        } catch (WebApplicationException e) {
             UI.addErrorMessage(getErrorMessageFrom(e));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             UI.addErrorMessage("Could not count lap: " + e.getMessage());
         }
     }

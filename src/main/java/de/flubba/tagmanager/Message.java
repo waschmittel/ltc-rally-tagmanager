@@ -1,10 +1,9 @@
 package de.flubba.tagmanager;
 
-import java.util.Date;
-
+import javafx.scene.paint.Color;
 import org.apache.commons.lang3.time.FastDateFormat;
 
-import javafx.scene.paint.Color;
+import java.util.Date;
 
 public class Message {
     public enum Type {
@@ -27,8 +26,8 @@ public class Message {
     }
 
     public TableDate date;
-    public String    message;
-    public Type      type = Type.INFO;
+    public String message;
+    public Type type = Type.INFO;
 
     public TableDate getDate() {
         return date;

@@ -1,7 +1,5 @@
 package de.flubba.tagmanager;
 
-import java.util.Date;
-
 import de.flubba.tagmanager.Message.TableDate;
 import de.flubba.tagmanager.Message.Type;
 import de.flubba.tagmanager.cardaction.CardAction;
@@ -31,31 +29,33 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.Date;
+
 public final class UI extends Application {
     private static UI INSTANCE;
 
-    private SplitPane mainPane = new SplitPane();
-    private VBox      left     = new VBox();
+    private final SplitPane mainPane = new SplitPane();
+    private final VBox left = new VBox();
 
-    private TextField baseUrl = new TextField("http://localhost:8080");
-    private HBox      top     = new HBox();
+    private final TextField baseUrl = new TextField("http://localhost:8080");
+    private final HBox top = new HBox();
 
-    private Button queryMode      = new Button("Tag Query Mode");
-    private Button assignmentMode = new Button("Tag Assignment Mode");
-    private Button lapCountMode   = new Button("Lap Count Mode");
+    private final Button queryMode = new Button("Tag Query Mode");
+    private final Button assignmentMode = new Button("Tag Assignment Mode");
+    private final Button lapCountMode = new Button("Lap Count Mode");
 
-    private TextField nextRunnerNumber = new TextField();
-    private Label     nextRunnerLabel  = new Label("Next number to assign:");
-    private CheckBox  overwrite        = new CheckBox("overwrite existing assignment");
+    private final TextField nextRunnerNumber = new TextField();
+    private final Label nextRunnerLabel = new Label("Next number to assign:");
+    private final CheckBox overwrite = new CheckBox("overwrite existing assignment");
 
     private ReaderThread currentReaderThread = null;
 
-    private TableView<Message>           messages      = new TableView<>();
-    private TableColumn<Message, Date>   dateColumn    = new TableColumn<>("Date");
-    private TableColumn<Message, String> messageColumn = new TableColumn<>("Message");
+    private final TableView<Message> messages = new TableView<>();
+    private final TableColumn<Message, Date> dateColumn = new TableColumn<>("Date");
+    private final TableColumn<Message, String> messageColumn = new TableColumn<>("Message");
 
-    private TextField runnerNumber = new TextField();
-    private TextField runnerName   = new TextField();
+    private final TextField runnerNumber = new TextField();
+    private final TextField runnerName = new TextField();
 
     @Override
     public void start(Stage primaryStage) {
@@ -127,8 +127,7 @@ public final class UI extends Application {
             addMessage("Waiting for current Reader to stop.");
             try {
                 currentReaderThread.join(); // this will block the UI, but it should not take longer than a second
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 addErrorMessage("I've been interrupted. This is weird.");
             }
             addMessage("Current Reader stopped.");
@@ -160,15 +159,14 @@ public final class UI extends Application {
     }
 
     private void initMessages() {
-        messages.setRowFactory(row -> new TableRow<Message>() {
+        messages.setRowFactory(row -> new TableRow<>() {
             @Override
             public void updateItem(Message message, boolean empty) {
                 super.updateItem(message, empty);
 
                 if (message == null || empty) {
                     setStyle("");
-                }
-                else {
+                } else {
                     if (message.message.length() > 20) {
                         for (Node cell : getChildren()) {
                             if (cell instanceof Labeled) {
@@ -182,10 +180,10 @@ public final class UI extends Application {
         });
         messages.getColumns().add(dateColumn);
         messages.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        dateColumn.setCellValueFactory(new PropertyValueFactory<Message, Date>("date"));
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         dateColumn.setMinWidth(80);
         dateColumn.setMaxWidth(80);
-        messageColumn.setCellValueFactory(new PropertyValueFactory<Message, String>("message"));
+        messageColumn.setCellValueFactory(new PropertyValueFactory<>("message"));
         messages.getColumns().add(messageColumn);
     }
 
