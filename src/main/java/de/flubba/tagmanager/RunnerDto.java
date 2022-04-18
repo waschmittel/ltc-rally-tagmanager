@@ -1,6 +1,4 @@
 package de.flubba.tagmanager;
 
-public class RunnerDto {
-    public Long id;
-    public String name;
+public record RunnerDto(Long id, String name) {
 }

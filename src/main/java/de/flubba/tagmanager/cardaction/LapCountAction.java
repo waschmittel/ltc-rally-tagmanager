@@ -15,7 +15,7 @@ public class LapCountAction extends CardAction {
             WebTarget target = clientConfig.path("countLap");
             target = target.queryParam("tagId", tagId);
             RunnerDto runner = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
-            UI.addMessage(String.format("Lap counted for %s (%s)", runner.name, runner.id));
+            UI.addMessage(String.format("Lap counted for %s (%s)", runner.name(), runner.id()));
             UI.setLastRunner(runner);
         } catch (WebApplicationException e) {
             UI.addErrorMessage(getErrorMessageFrom(e));
