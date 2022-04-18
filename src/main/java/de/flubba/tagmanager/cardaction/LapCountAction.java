@@ -1,12 +1,11 @@
 package de.flubba.tagmanager.cardaction;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-
 import de.flubba.tagmanager.RunnerDto;
 import de.flubba.tagmanager.UI;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.Entity;
+import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
 
 public class LapCountAction extends CardAction {
     @Override

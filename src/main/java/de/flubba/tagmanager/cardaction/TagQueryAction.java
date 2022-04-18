@@ -1,10 +1,9 @@
 package de.flubba.tagmanager.cardaction;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.client.WebTarget;
-
 import de.flubba.tagmanager.TagAssignment;
 import de.flubba.tagmanager.UI;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.WebTarget;
 
 public class TagQueryAction extends CardAction {
 
