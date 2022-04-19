@@ -1,4 +1,6 @@
 @echo off
 mvn clean package
 cd target
-jpackage --name "LTC Rallye Tagmanager" --input . --main-jar tagmanager.jar --type app-image
+md package
+move tagmanager.jar package
+jpackage --name "LTC Rallye Tagmanager" --input package --main-jar tagmanager.jar --type app-image
