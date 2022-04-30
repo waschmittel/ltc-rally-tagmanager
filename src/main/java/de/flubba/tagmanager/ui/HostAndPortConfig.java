@@ -57,14 +57,16 @@ public class HostAndPortConfig extends JPanel {
         Integer port = getPort();
         String host = getHost();
 
-        if (port != null && host != null) {
-            WebClient.setHostAndPort(hostField.getText(), port);
-        }
+        WebClient.setHostAndPort(hostField.getText(), port);
     }
 
     private String getHost() {
         String host = hostField.getText();
-        if (host.matches("[a-z\\d.]+")) {
+        if (host.matches("[a-z\\d.]+")
+                && !host.matches("\\..*")
+                && !host.matches(".*\\.")
+                && !host.matches(".*\\.\\..*")
+        ) {
             hostField.setBackground(defaultBackground);
             hostField.setToolTipText(null);
             return host;

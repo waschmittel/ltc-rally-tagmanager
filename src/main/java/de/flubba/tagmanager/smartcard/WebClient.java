@@ -9,19 +9,23 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class WebClient {
     private static WebTarget clientConfig = null;
 
-    public static void setHostAndPort(String hostname, int port) {
+    public static void setHostAndPort(String hostname, Integer port) {
+        if (hostname == null || port == null) {
+            clientConfig = null;
+        }
         clientConfig = ClientBuilder.newClient(new ClientConfig()).target("http://%s:%s".formatted(hostname, port));
     }
 
     public static WebTarget getClient() {
-        Objects.requireNonNull(clientConfig);
+        if (clientConfig == null) {
+            throw new IllegalArgumentException("no valid host/port set");
+        }
         return clientConfig;
     }
 

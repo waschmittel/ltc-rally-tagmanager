@@ -85,6 +85,8 @@ public class TagAssignmentTab extends CardActionPanel {
             LOG_TABLE.addMessage(Level.ERROR, WebClient.getErrorMessageFrom(e));
         } catch (NumberFormatException e) {
             LOG_TABLE.addMessage(Level.ERROR, "Cannot register tag without a valid runner number: " + e.getMessage());
+        } catch (RuntimeException e) {
+            LOG_TABLE.addMessage(Level.ERROR, "Could not assign tag: " + e.getMessage());
         }
     }
 }

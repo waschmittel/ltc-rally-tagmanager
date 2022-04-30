@@ -77,7 +77,7 @@ public class LapCoutingTab extends CardActionPanel {
             runnerNumber.setText(runner.id().toString());
         } catch (WebApplicationException e) {
             LOG_TABLE.addMessage(Level.ERROR, WebClient.getErrorMessageFrom(e));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             LOG_TABLE.addMessage(Level.ERROR, ("Could not count lap: " + e.getMessage()));
         }
 

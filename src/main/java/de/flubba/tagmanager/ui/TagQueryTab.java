@@ -72,6 +72,8 @@ public class TagQueryTab extends CardActionPanel {
             LOG_TABLE.addMessage(INFO, String.format("Tag %s is assigned to runner %s", assignment.tagId(), assignment.runnerId()));
         } catch (WebApplicationException e) {
             LOG_TABLE.addMessage(Level.ERROR, getErrorMessageFrom(e));
+        } catch (RuntimeException e) {
+            LOG_TABLE.addMessage(Level.ERROR, "Could not query tag: " + e.getMessage());
         }
     }
 }
