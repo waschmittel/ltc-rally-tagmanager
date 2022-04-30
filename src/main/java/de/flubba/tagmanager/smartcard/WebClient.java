@@ -1,6 +1,5 @@
-package de.flubba.tagmanager.cardaction;
+package de.flubba.tagmanager.smartcard;
 
-import de.flubba.tagmanager.UI;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
@@ -10,15 +9,26 @@ import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public abstract class CardAction {
-    protected WebTarget clientConfig = ClientBuilder.newClient(new ClientConfig()).target(UI.getBaseUrl());
+public final class WebClient {
+    private static WebTarget clientConfig = null;
 
-    public abstract void doWithTagId(String uid);
+    public static void setUrl(String url) {
+        clientConfig = ClientBuilder.newClient(new ClientConfig()).target(url);
+    }
 
-    protected static String getErrorMessageFrom(WebApplicationException e) {
+    public static WebTarget getClient() {
+        Objects.requireNonNull(clientConfig);
+        return clientConfig;
+    }
+
+    private WebClient() {
+    }
+
+    public static String getErrorMessageFrom(WebApplicationException e) {
         Object entity = e.getResponse().getEntity();
         if (entity instanceof InputStream inputStream) {
             try {
@@ -33,4 +43,5 @@ public abstract class CardAction {
         }
         return "Error: Could not get error message.";
     }
+
 }
