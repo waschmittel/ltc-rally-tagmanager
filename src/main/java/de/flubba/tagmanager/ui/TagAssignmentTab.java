@@ -55,8 +55,6 @@ public class TagAssignmentTab extends CardActionPanel {
         springLayout.putConstraint(WEST, nextNumber, 0, WEST, this);
         springLayout.putConstraint(SOUTH, nextNumber, 0, NORTH, overwrite);
         springLayout.putConstraint(SOUTH, overwrite, 0, SOUTH, this);
-
-        System.out.println(((Integer) nextNumber.getValue()).longValue());
     }
 
     @Override

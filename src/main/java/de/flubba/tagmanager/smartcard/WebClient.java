@@ -16,8 +16,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class WebClient {
     private static WebTarget clientConfig = null;
 
-    public static void setUrl(String url) {
-        clientConfig = ClientBuilder.newClient(new ClientConfig()).target(url);
+    public static void setHostAndPort(String hostname, int port) {
+        clientConfig = ClientBuilder.newClient(new ClientConfig()).target("http://%s:%s".formatted(hostname, port));
     }
 
     public static WebTarget getClient() {

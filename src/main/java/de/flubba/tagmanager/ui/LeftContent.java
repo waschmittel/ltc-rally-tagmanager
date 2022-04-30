@@ -6,7 +6,6 @@ import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import java.awt.Dimension;
 import java.util.List;
@@ -17,7 +16,6 @@ import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
-import static javax.swing.SwingConstants.CENTER;
 
 public class LeftContent extends JPanel {
 
@@ -60,25 +58,22 @@ public class LeftContent extends JPanel {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
 
-        var urlField = new JTextField("http://localhost:8080");//TODO: proper URL field with validation?
-        urlField.setMinimumSize(new Dimension(300, 30));
-        urlField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
-        urlField.setHorizontalAlignment(CENTER);
-
         tabs.setPreferredSize(new Dimension(700, 800));
         tabs.addChangeListener(e -> setActionToCurrentCard());
         addCardActionTabs();
         tabs.setSelectedIndex(2);
 
-        add(urlField);
+        var hostAndPortConfig = new HostAndPortConfig();
+        
+        add(hostAndPortConfig);
         add(tabs);
 
-        springLayout.putConstraint(NORTH, urlField, 0, NORTH, this);
-        springLayout.putConstraint(EAST, urlField, 0, EAST, this);
-        springLayout.putConstraint(WEST, urlField, 0, WEST, this);
-        springLayout.putConstraint(NORTH, tabs, 6, SOUTH, urlField);
-        springLayout.putConstraint(WEST, this, 0, WEST, urlField);
-        springLayout.putConstraint(EAST, this, 0, EAST, urlField);
+        springLayout.putConstraint(NORTH, hostAndPortConfig, 0, NORTH, this);
+        springLayout.putConstraint(EAST, hostAndPortConfig, 0, EAST, this);
+        springLayout.putConstraint(WEST, hostAndPortConfig, 0, WEST, this);
+        springLayout.putConstraint(NORTH, tabs, 6, SOUTH, hostAndPortConfig);
+        springLayout.putConstraint(WEST, this, 0, WEST, hostAndPortConfig);
+        springLayout.putConstraint(EAST, this, 0, EAST, hostAndPortConfig);
         springLayout.putConstraint(WEST, this, 0, WEST, tabs);
         springLayout.putConstraint(EAST, this, 0, EAST, tabs);
         springLayout.putConstraint(SOUTH, this, 0, SOUTH, tabs);
