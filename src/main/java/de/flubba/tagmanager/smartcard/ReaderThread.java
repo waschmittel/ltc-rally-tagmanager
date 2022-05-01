@@ -1,7 +1,5 @@
 package de.flubba.tagmanager.smartcard;
 
-import jnasmartcardio.Smartcardio;
-
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
@@ -13,7 +11,6 @@ import javax.smartcardio.TerminalFactory;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.Security;
 import java.util.List;
 
 import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.ERROR;
@@ -30,7 +27,6 @@ public class ReaderThread extends Thread {
 
     @Override
     public void run() {
-        Security.addProvider(new Smartcardio()); // fixes some bugs of Java's default implementation
         while (!isInterrupted()) {
             findTerminalAndReadTags();
             try {
@@ -89,7 +85,7 @@ public class ReaderThread extends Thread {
     }
 
     private static List<CardTerminal> getCardTerminals() throws NoSuchAlgorithmException, NoSuchProviderException, CardException {
-        TerminalFactory factory = TerminalFactory.getInstance("PC/SC", null, Smartcardio.PROVIDER_NAME);
+        TerminalFactory factory = TerminalFactory.getInstance("PC/SC", null);
         return factory.terminals().list();
     }
 

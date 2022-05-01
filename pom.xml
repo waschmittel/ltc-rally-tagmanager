@@ -17,11 +17,11 @@
     </properties>
 
     <dependencies>
-        <dependency>
+        <!--<dependency> TODO: this seems to be unnecessary as of 2022 - confirm this
             <groupId>io.github.jnasmartcardio</groupId>
             <artifactId>jnasmartcardio</artifactId>
             <version>0.2.7</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
