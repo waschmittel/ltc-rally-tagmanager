@@ -20,23 +20,24 @@ import static java.awt.Color.YELLOW;
 
 public class LogTable extends JPanel {
     private final LogTableModel logMessages = new LogTableModel();
+    private final JTable table = new JTable(logMessages);
+    private final JScrollPane scrollPane = new JScrollPane(table);
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault());
 
     public void addMessage(LogMessage.Level level, String message) {
         logMessages.addLogMessage(new LogMessage(level, formatter.format(Instant.now()), message));
+        scrollPane.getVerticalScrollBar().setVisible(true); //necessary to make it appear as soon as it's necessary
         repaint();
     }
 
     public record LogMessage(Level level, String datetime, String message) {
         public enum Level {
             ERROR, WARN, INFO
-
         }
     }
 
     public LogTable() {
-        var table = new JTable(logMessages);
         table.getColumnModel().getColumn(0).setPreferredWidth(1500);
         table.getColumnModel().getColumn(1).setPreferredWidth(800);
         table.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
@@ -64,8 +65,8 @@ public class LogTable extends JPanel {
                 }
             }
         });
-        JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
+
         scrollPane.setPreferredSize(new Dimension(700, 800));
         setLayout(new GridLayout(1, 1));
         add(scrollPane);
