@@ -62,10 +62,10 @@ public class HostAndPortConfig extends JPanel {
 
     private String getHost() {
         String host = hostField.getText();
-        if (host.matches("[a-z\\d.]+")
-                && !host.matches("\\..*")
-                && !host.matches(".*\\.")
-                && !host.matches(".*\\.\\..*")
+        if (host.matches("[a-z\\d.]+") &&
+                !host.matches("\\..*") &&
+                !host.matches(".*\\.") &&
+                !host.matches(".*\\.\\..*")
         ) {
             hostField.setBackground(defaultBackground);
             hostField.setToolTipText(null);
