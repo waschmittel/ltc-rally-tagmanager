@@ -17,6 +17,9 @@ import static javax.swing.SpringLayout.WEST;
 public final class UI {
     public static final LogTable LOG_TABLE = new LogTable();
 
+    private UI() {
+    }
+
     public static void createAndShow() {
         JFrame frame = setupWindow();
         layoutFrame(frame);

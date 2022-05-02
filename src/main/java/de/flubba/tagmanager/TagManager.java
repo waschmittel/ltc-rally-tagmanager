@@ -9,7 +9,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import static de.flubba.tagmanager.util.OsType.MacOS;
 
-public class SwingUI {
+public final class TagManager {
+    private TagManager() {
+    }
+
     public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         if (OsType.get() == MacOS) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
