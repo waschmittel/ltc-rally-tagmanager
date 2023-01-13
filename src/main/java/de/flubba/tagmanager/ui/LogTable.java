@@ -3,6 +3,7 @@ package de.flubba.tagmanager.ui;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.Dimension;
@@ -27,8 +28,7 @@ public class LogTable extends JPanel {
 
     public void addMessage(LogMessage.Level level, String message) {
         logMessages.addLogMessage(new LogMessage(level, formatter.format(Instant.now()), message));
-        scrollPane.getVerticalScrollBar().setVisible(true); //necessary to make it appear as soon as it's necessary
-        repaint();
+        scrollPane.getViewport().updateUI();
     }
 
     public record LogMessage(Level level, String datetime, String message) {
@@ -68,6 +68,7 @@ public class LogTable extends JPanel {
         table.setFillsViewportHeight(true);
 
         scrollPane.setPreferredSize(new Dimension(700, 800));
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         setLayout(new GridLayout(1, 1));
         add(scrollPane);
     }
