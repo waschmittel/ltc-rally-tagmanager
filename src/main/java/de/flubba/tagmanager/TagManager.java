@@ -1,5 +1,6 @@
 package de.flubba.tagmanager;
 
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import de.flubba.tagmanager.ui.UI;
 import de.flubba.tagmanager.util.OsType;
 
@@ -17,7 +18,7 @@ public final class TagManager {
         if (OsType.get() == MacOS) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("apple.awt.application.name", "LTC Rallye Tag Manager");
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(new FlatIntelliJLaf());
             UIManager.getDefaults().put("SplitPane.border", BorderFactory.createEmptyBorder());
         }
 
