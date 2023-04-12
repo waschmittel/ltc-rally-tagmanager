@@ -14,13 +14,13 @@ public final class TagManager {
     private TagManager() {
     }
 
-    public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) throws UnsupportedLookAndFeelException {
         if (OsType.get() == MacOS) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("apple.awt.application.name", "LTC Rallye Tag Manager");
-            UIManager.setLookAndFeel(new FlatIntelliJLaf());
-            UIManager.getDefaults().put("SplitPane.border", BorderFactory.createEmptyBorder());
         }
+        UIManager.setLookAndFeel(new FlatIntelliJLaf());
+        UIManager.getDefaults().put("SplitPane.border", BorderFactory.createEmptyBorder());
 
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
