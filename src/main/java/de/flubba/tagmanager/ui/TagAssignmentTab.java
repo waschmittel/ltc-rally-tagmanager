@@ -23,7 +23,6 @@ import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.BOTTOM;
 import static javax.swing.SwingConstants.CENTER;
-import static javax.swing.SwingConstants.LEFT;
 
 public class TagAssignmentTab extends CardActionPanel {
 

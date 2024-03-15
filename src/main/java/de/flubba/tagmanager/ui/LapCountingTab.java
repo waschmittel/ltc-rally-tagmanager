@@ -21,41 +21,25 @@ import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
 public class LapCountingTab extends CardActionPanel {
-
-    private final JLabel runnerNumber = new JLabel();
-    private final JLabel runnerName = new JLabel();
+    private final JLabel runnerNumber;
+    private final JLabel runnerName;
 
     public LapCountingTab() {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
 
-        JLabel title = new JLabel();
-        title.setFont(new Font(
-                "Arial",
-                title.getFont().getStyle(),
-                50 // Swing on macOS will only display emojis for size 50 or less.
-        ));
-        title.setHorizontalAlignment(CENTER);
-
-        runnerNumber.setFont(new Font(
-                runnerNumber.getFont().getName(),
-                runnerNumber.getFont().getStyle(),
-                300
-        ));
-        runnerNumber.setHorizontalAlignment(CENTER);
-
-        runnerName.setFont(new Font(
-                runnerName.getFont().getName(),
-                runnerName.getFont().getStyle(),
-                50
-        ));
-        runnerName.setHorizontalAlignment(CENTER);
-        runnerName.setEnabled(false);
+        var title = buildTitle();
+        runnerNumber = buildRunnerNumber();
+        runnerName = buildRunnerName();
 
         add(title);
         add(runnerName);
         add(runnerNumber);
 
+        layout(springLayout, title);
+    }
+
+    private void layout(SpringLayout springLayout, JLabel title) {
         // title on top center
         springLayout.putConstraint(EAST, title, 0, EAST, this);
         springLayout.putConstraint(WEST, title, 0, WEST, this);
@@ -71,10 +55,40 @@ public class LapCountingTab extends CardActionPanel {
         springLayout.putConstraint(EAST, runnerName, 0, EAST, this);
         springLayout.putConstraint(WEST, runnerName, 0, WEST, this);
         springLayout.putConstraint(SOUTH, runnerName, -15, SOUTH, this);
+    }
 
-        title.setText("🏃");
-        runnerName.setText("waiting for runner");
-        runnerNumber.setText("#");
+    private JLabel buildRunnerName() {
+        JLabel runnerName= new JLabel("waiting for runner");
+        runnerName.setFont(new Font(
+                runnerName.getFont().getName(),
+                runnerName.getFont().getStyle(),
+                50
+        ));
+        runnerName.setHorizontalAlignment(CENTER);
+        runnerName.setEnabled(false);
+        return runnerName;
+    }
+
+    private JLabel buildRunnerNumber() {
+        final JLabel runnerNumber = new JLabel("#");
+        runnerNumber.setFont(new Font(
+                runnerNumber.getFont().getName(),
+                runnerNumber.getFont().getStyle(),
+                300
+        ));
+        runnerNumber.setHorizontalAlignment(CENTER);
+        return runnerNumber;
+    }
+
+    private static JLabel buildTitle() {
+        JLabel title = new JLabel("🏃");
+        title.setFont(new Font(
+                "Arial",
+                title.getFont().getStyle(),
+                50 // Swing on macOS will only display emojis for size 50 or less.
+        ));
+        title.setHorizontalAlignment(CENTER);
+        return title;
     }
 
     @Override
