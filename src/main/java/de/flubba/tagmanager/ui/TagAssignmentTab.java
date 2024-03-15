@@ -26,7 +26,7 @@ import static javax.swing.SwingConstants.CENTER;
 
 public class TagAssignmentTab extends CardActionPanel {
 
-    private final JSpinner nextNumber = new JSpinner(new SpinnerNumberModel(1, 1, 30000, 1));
+    private final JSpinner numberSpinner = new JSpinner(new SpinnerNumberModel(1L, 1L, 30000, 1L));
     private final JCheckBox overwrite = new JCheckBox("overwrite existing assignment");
 
     public TagAssignmentTab() {
@@ -35,25 +35,25 @@ public class TagAssignmentTab extends CardActionPanel {
         var nextNumberLabel = new JLabel("next number to assign:");
         nextNumberLabel.setHorizontalAlignment(CENTER);
         nextNumberLabel.setVerticalAlignment(BOTTOM);
-        nextNumber.setFont(new Font(
-                nextNumber.getFont().getName(),
-                nextNumber.getFont().getStyle(),
+        numberSpinner.setFont(new Font(
+                numberSpinner.getFont().getName(),
+                numberSpinner.getFont().getStyle(),
                 100));
-        if (nextNumber.getEditor() instanceof JSpinner.DefaultEditor defaultEditor) {
+        if (numberSpinner.getEditor() instanceof JSpinner.DefaultEditor defaultEditor) {
             defaultEditor.getTextField().setHorizontalAlignment(CENTER);
         }
 
         add(nextNumberLabel);
-        add(nextNumber);
+        add(numberSpinner);
         add(overwrite);
 
         springLayout.putConstraint(NORTH, nextNumberLabel, 0, NORTH, this);
-        springLayout.putConstraint(SOUTH, nextNumberLabel, 0, NORTH, nextNumber);
+        springLayout.putConstraint(SOUTH, nextNumberLabel, 0, NORTH, numberSpinner);
         springLayout.putConstraint(EAST, nextNumberLabel, 0, EAST, this);
         springLayout.putConstraint(WEST, nextNumberLabel, 0, WEST, this);
-        springLayout.putConstraint(EAST, nextNumber, 0, EAST, this);
-        springLayout.putConstraint(WEST, nextNumber, 0, WEST, this);
-        springLayout.putConstraint(SOUTH, nextNumber, 0, NORTH, overwrite);
+        springLayout.putConstraint(EAST, numberSpinner, 0, EAST, this);
+        springLayout.putConstraint(WEST, numberSpinner, 0, WEST, this);
+        springLayout.putConstraint(SOUTH, numberSpinner, 0, NORTH, overwrite);
         springLayout.putConstraint(SOUTH, overwrite, 0, SOUTH, this);
     }
 
@@ -65,7 +65,9 @@ public class TagAssignmentTab extends CardActionPanel {
     @Override
     public void doWithTagId(String tagId) {
         try {
-            var runnerNumber = nextNumber.getValue() instanceof Integer integer ? integer.longValue() : null;
+            Long runnerNumber = numberSpinner.getValue() instanceof Long number ? number :
+                    numberSpinner.getValue() instanceof Integer integer ? integer.longValue() :
+                            numberSpinner.getValue() instanceof Double doubleNum ? doubleNum.longValue() : null;
             if (runnerNumber == null) {
                 throw new NumberFormatException("value of field is not an Integer");
             }
@@ -80,7 +82,7 @@ public class TagAssignmentTab extends CardActionPanel {
                     .queryParam("overwrite", assignmentInformation.overwrite());
             String response = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
             LOG_TABLE.addMessage(INFO, response);
-            nextNumber.setValue(assignmentInformation.runnerNumber() + 1);
+            numberSpinner.setValue(assignmentInformation.runnerNumber() + 1L);
         } catch (WebApplicationException e) {
             LOG_TABLE.addMessage(Level.ERROR, WebClient.getErrorMessageFrom(e));
         } catch (NumberFormatException e) {
