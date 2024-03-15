@@ -8,7 +8,7 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 
-import javax.swing.JTextField;
+import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
@@ -20,14 +20,22 @@ import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
-public class LapCoutingTab extends CardActionPanel {
+public class LapCountingTab extends CardActionPanel {
 
-    private final JTextField runnerName = new JTextField();
-    private final JTextField runnerNumber = new JTextField();
+    private final JLabel runnerNumber = new JLabel();
+    private final JLabel runnerName = new JLabel();
 
-    public LapCoutingTab() {
+    public LapCountingTab() {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
+
+        JLabel title = new JLabel();
+        title.setFont(new Font(
+                "Arial",
+                title.getFont().getStyle(),
+                50 // Swing on macOS will only display emojis for size 50 or less.
+        ));
+        title.setHorizontalAlignment(CENTER);
 
         runnerNumber.setFont(new Font(
                 runnerNumber.getFont().getName(),
@@ -35,7 +43,6 @@ public class LapCoutingTab extends CardActionPanel {
                 300
         ));
         runnerNumber.setHorizontalAlignment(CENTER);
-        runnerNumber.setEditable(false);
 
         runnerName.setFont(new Font(
                 runnerName.getFont().getName(),
@@ -44,25 +51,35 @@ public class LapCoutingTab extends CardActionPanel {
         ));
         runnerName.setHorizontalAlignment(CENTER);
         runnerName.setEnabled(false);
-        runnerName.setEditable(false);
 
+        add(title);
         add(runnerName);
         add(runnerNumber);
 
+        // title on top center
+        springLayout.putConstraint(EAST, title, 0, EAST, this);
+        springLayout.putConstraint(WEST, title, 0, WEST, this);
+        springLayout.putConstraint(NORTH, title, 15, NORTH, this);
+
+        // horizontally and vertically  center runner number
+        springLayout.putConstraint(NORTH, runnerNumber, 1, SOUTH, title);
         springLayout.putConstraint(EAST, runnerNumber, 0, EAST, this);
         springLayout.putConstraint(WEST, runnerNumber, 0, WEST, this);
-        springLayout.putConstraint(NORTH, runnerName, 6, SOUTH, runnerNumber);
+        springLayout.putConstraint(SOUTH, runnerNumber, 1, NORTH, runnerName);
+
+        // horizontally center runner name
         springLayout.putConstraint(EAST, runnerName, 0, EAST, this);
         springLayout.putConstraint(WEST, runnerName, 0, WEST, this);
-        springLayout.putConstraint(SOUTH, runnerName, 0, SOUTH, this);
+        springLayout.putConstraint(SOUTH, runnerName, -15, SOUTH, this);
 
+        title.setText("🏃");
         runnerName.setText("waiting for runner");
         runnerNumber.setText("#");
     }
 
     @Override
     public String getTitle() {
-        return "Lap Counting";
+        return "🏃‍ Lap Counting";
     }
 
     @Override

@@ -6,7 +6,7 @@ import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.WebTarget;
 
-import javax.swing.JTextField;
+import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
@@ -20,12 +20,20 @@ import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
 public class TagQueryTab extends CardActionPanel {
-    JTextField tagId = new JTextField();
-    JTextField runnerNumber = new JTextField();
+    JLabel title = new JLabel();
+    JLabel runnerNumber = new JLabel();
+    JLabel tagId = new JLabel();
 
     public TagQueryTab() {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
+
+        title.setHorizontalAlignment(CENTER);
+        title.setFont(new Font(
+                "Arial",
+                title.getFont().getStyle(),
+                50 // Swing on macOS will only display emojis for size 50 or less.
+        ));
 
         tagId.setHorizontalAlignment(CENTER);
         tagId.setFont(new Font(
@@ -33,7 +41,6 @@ public class TagQueryTab extends CardActionPanel {
                 tagId.getFont().getStyle(),
                 40
         ));
-        tagId.setEnabled(false);
 
         runnerNumber.setHorizontalAlignment(CENTER);
         runnerNumber.setFont(new Font(
@@ -41,25 +48,32 @@ public class TagQueryTab extends CardActionPanel {
                 runnerNumber.getFont().getStyle(),
                 200
         ));
-        runnerNumber.setEnabled(false);
 
-        add(tagId);
+        add(title);
         add(runnerNumber);
+        add(tagId);
+
+        springLayout.putConstraint(EAST, title, 0, EAST, this);
+        springLayout.putConstraint(WEST, title, 0, WEST, this);
+        springLayout.putConstraint(NORTH, title, 15, NORTH, this);
+
+        springLayout.putConstraint(NORTH, runnerNumber, 1, SOUTH, title);
+        springLayout.putConstraint(EAST, runnerNumber, 0, EAST, this);
+        springLayout.putConstraint(WEST, runnerNumber, 0, WEST, this);
+        springLayout.putConstraint(SOUTH, runnerNumber, 0, NORTH, tagId);
 
         springLayout.putConstraint(EAST, tagId, 0, EAST, this);
         springLayout.putConstraint(WEST, tagId, 0, WEST, this);
-        springLayout.putConstraint(EAST, runnerNumber, 0, EAST, this);
-        springLayout.putConstraint(WEST, runnerNumber, 0, WEST, this);
-        springLayout.putConstraint(NORTH, runnerNumber, 6, SOUTH, tagId);
-        springLayout.putConstraint(SOUTH, runnerNumber, 0, SOUTH, this);
+        springLayout.putConstraint(SOUTH, tagId, -15, SOUTH, this);
 
-        tagId.setText("waiting for tag");
+        title.setText("💡");
         runnerNumber.setText("#");
+        tagId.setText("waiting for tag");
     }
 
     @Override
     public String getTitle() {
-        return "Tag Query";
+        return "💡 Tag Query";
     }
 
     @Override

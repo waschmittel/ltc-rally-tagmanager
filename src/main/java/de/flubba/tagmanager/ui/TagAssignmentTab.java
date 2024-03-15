@@ -23,6 +23,7 @@ import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.BOTTOM;
 import static javax.swing.SwingConstants.CENTER;
+import static javax.swing.SwingConstants.LEFT;
 
 public class TagAssignmentTab extends CardActionPanel {
 
@@ -46,20 +47,23 @@ public class TagAssignmentTab extends CardActionPanel {
         add(nextNumberLabel);
         add(numberSpinner);
         add(overwrite);
+        overwrite.setHorizontalAlignment(CENTER);
 
-        springLayout.putConstraint(NORTH, nextNumberLabel, 0, NORTH, this);
         springLayout.putConstraint(SOUTH, nextNumberLabel, 0, NORTH, numberSpinner);
-        springLayout.putConstraint(EAST, nextNumberLabel, 0, EAST, this);
-        springLayout.putConstraint(WEST, nextNumberLabel, 0, WEST, this);
-        springLayout.putConstraint(EAST, numberSpinner, 0, EAST, this);
-        springLayout.putConstraint(WEST, numberSpinner, 0, WEST, this);
+        springLayout.putConstraint(EAST, nextNumberLabel, -30, EAST, this);
+        springLayout.putConstraint(WEST, nextNumberLabel, 30, WEST, this);
+        springLayout.putConstraint(EAST, numberSpinner, -30, EAST, this);
+        springLayout.putConstraint(WEST, numberSpinner, 30, WEST, this);
         springLayout.putConstraint(SOUTH, numberSpinner, 0, NORTH, overwrite);
-        springLayout.putConstraint(SOUTH, overwrite, 0, SOUTH, this);
+
+        springLayout.putConstraint(EAST, overwrite, 0, EAST, this);
+        springLayout.putConstraint(WEST, overwrite, 0, WEST, this);
+        springLayout.putConstraint(SOUTH, overwrite, -15, SOUTH, this);
     }
 
     @Override
     public String getTitle() {
-        return "Tag Assignment";
+        return "🔩 Tag Assignment";
     }
 
     @Override

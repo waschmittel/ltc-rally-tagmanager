@@ -24,7 +24,7 @@ public class LeftContent extends JPanel {
     private final List<CardActionPanel> cardActionPanels = List.of(
             new TagAssignmentTab(),
             new TagQueryTab(),
-            new LapCoutingTab()
+            new LapCountingTab()
     );
 
     private ReaderThread currentReaderThread = null;
@@ -58,6 +58,9 @@ public class LeftContent extends JPanel {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
 
+        tabs.putClientProperty("JTabbedPane.tabType", "card");
+        tabs.putClientProperty("JTabbedPane.hasFullBorder", true);
+        tabs.putClientProperty("JTabbedPane.tabAreaAlignment", "fill");
         tabs.setPreferredSize(new Dimension(700, 800));
         tabs.addChangeListener(e -> setActionToCurrentCard());
         addCardActionTabs();
