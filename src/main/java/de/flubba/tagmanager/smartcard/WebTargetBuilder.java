@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public final class WebClient {
+public final class WebTargetBuilder {
     private static WebTarget clientConfig = null;
 
     public static void setHostAndPort(String hostname, Integer port) {
@@ -29,7 +29,7 @@ public final class WebClient {
         return clientConfig;
     }
 
-    private WebClient() {
+    private WebTargetBuilder() {
     }
 
     public static String getErrorMessageFrom(WebApplicationException e) {

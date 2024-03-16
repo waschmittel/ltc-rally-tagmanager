@@ -1,7 +1,7 @@
 package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.AssignmentInformation;
-import de.flubba.tagmanager.smartcard.WebClient;
+import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
@@ -79,7 +79,7 @@ public class TagAssignmentTab extends CardActionPanel {
                     overwrite.isSelected()
             );
             LOG_TABLE.addMessage(INFO, "Pushing " + tagId + " for runner " + assignmentInformation.runnerNumber());
-            WebTarget target = WebClient.getClient().path("setTagAssignment");
+            WebTarget target = WebTargetBuilder.getClient().path("setTagAssignment");
             target = target.queryParam("tagId", tagId)
                     .queryParam("runnerId", assignmentInformation.runnerNumber())
                     .queryParam("overwrite", assignmentInformation.overwrite());
@@ -87,7 +87,7 @@ public class TagAssignmentTab extends CardActionPanel {
             LOG_TABLE.addMessage(INFO, response);
             numberSpinner.setValue(assignmentInformation.runnerNumber() + 1L);
         } catch (WebApplicationException e) {
-            LOG_TABLE.addMessage(Level.ERROR, WebClient.getErrorMessageFrom(e));
+            LOG_TABLE.addMessage(Level.ERROR, WebTargetBuilder.getErrorMessageFrom(e));
         } catch (NumberFormatException e) {
             LOG_TABLE.addMessage(Level.ERROR, "Cannot register tag without a valid runner number: " + e.getMessage());
         } catch (RuntimeException e) {

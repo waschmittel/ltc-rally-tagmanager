@@ -1,6 +1,6 @@
 package de.flubba.tagmanager.ui;
 
-import de.flubba.tagmanager.smartcard.WebClient;
+import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import de.flubba.tagmanager.util.SimpleDocumentListener;
 
 import javax.swing.JLabel;
@@ -57,7 +57,7 @@ public class HostAndPortConfig extends JPanel {
         Integer port = getPort();
         String host = getHost();
 
-        WebClient.setHostAndPort(hostField.getText(), port);
+        WebTargetBuilder.setHostAndPort(hostField.getText(), port);
     }
 
     private String getHost() {

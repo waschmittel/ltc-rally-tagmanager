@@ -1,7 +1,7 @@
 package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.RunnerDto;
-import de.flubba.tagmanager.smartcard.WebClient;
+import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
@@ -25,9 +25,6 @@ public class LapCountingTab extends CardActionPanel {
     private final JLabel runnerName;
 
     public LapCountingTab() {
-        var springLayout = new SpringLayout();
-        setLayout(springLayout);
-
         var title = buildTitle();
         runnerNumber = buildRunnerNumber();
         runnerName = buildRunnerName();
@@ -36,10 +33,13 @@ public class LapCountingTab extends CardActionPanel {
         add(runnerName);
         add(runnerNumber);
 
-        layout(springLayout, title);
+        layout(title);
     }
 
-    private void layout(SpringLayout springLayout, JLabel title) {
+    private void layout(JLabel title) {
+        var springLayout = new SpringLayout();
+        setLayout(springLayout);
+
         // title on top center
         springLayout.putConstraint(EAST, title, 0, EAST, this);
         springLayout.putConstraint(WEST, title, 0, WEST, this);
@@ -58,7 +58,7 @@ public class LapCountingTab extends CardActionPanel {
     }
 
     private JLabel buildRunnerName() {
-        JLabel runnerName= new JLabel("waiting for runner");
+        JLabel runnerName = new JLabel("waiting for runner");
         runnerName.setFont(new Font(
                 runnerName.getFont().getName(),
                 runnerName.getFont().getStyle(),
@@ -100,14 +100,14 @@ public class LapCountingTab extends CardActionPanel {
     public void doWithTagId(String tagId) {
         try {
             LOG_TABLE.addMessage(INFO, "Counting lap for token " + tagId);
-            WebTarget target = WebClient.getClient().path("countLap");
+            WebTarget target = WebTargetBuilder.getClient().path("countLap");
             target = target.queryParam("tagId", tagId);
             RunnerDto runner = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
             LOG_TABLE.addMessage(INFO, String.format("Lap counted for %s (%s)", runner.name(), runner.id()));
             runnerName.setText(runner.name());
             runnerNumber.setText(runner.id().toString());
         } catch (WebApplicationException e) {
-            LOG_TABLE.addMessage(Level.ERROR, WebClient.getErrorMessageFrom(e));
+            LOG_TABLE.addMessage(Level.ERROR, WebTargetBuilder.getErrorMessageFrom(e));
         } catch (RuntimeException e) {
             LOG_TABLE.addMessage(Level.ERROR, ("Could not count lap: " + e.getMessage()));
         }
