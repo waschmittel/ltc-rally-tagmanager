@@ -38,7 +38,7 @@ public class LeftContent extends JPanel {
                 log.error("I've been interrupted. This is weird.");
                 Thread.currentThread().interrupt();
             }
-            log.info( "Current Reader stopped.");
+            log.info("Current Reader stopped.");
         }
         currentReaderThread = new ReaderThread(cardAction);
         currentReaderThread.start();
@@ -66,7 +66,7 @@ public class LeftContent extends JPanel {
         tabs.setSelectedIndex(2);
 
         var hostAndPortConfig = new HostAndPortConfig();
-        
+
         add(hostAndPortConfig);
         add(tabs);
 

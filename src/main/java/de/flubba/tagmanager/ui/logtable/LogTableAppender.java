@@ -14,15 +14,15 @@ public class LogTableAppender extends AppenderBase<ILoggingEvent> {
         getLevel(event).ifPresent(level -> LOG_TABLE.addMessage(level, event.getFormattedMessage()));
     }
 
-    private Optional<LogTable.LogMessage.Level> getLevel(ILoggingEvent event) {
+    private Optional<LogTableModel.Level> getLevel(ILoggingEvent event) {
         var logbackLevel = event.getLevel();
         if (Level.ERROR.equals(logbackLevel)) {
-            return Optional.of(LogTable.LogMessage.Level.ERROR);
+            return Optional.of(LogTableModel.Level.ERROR);
         }
         if (Level.WARN.equals(logbackLevel)) {
-            return Optional.of(LogTable.LogMessage.Level.WARN);
+            return Optional.of(LogTableModel.Level.WARN);
         } else if (Level.INFO.equals(logbackLevel)) {
-            return Optional.of(LogTable.LogMessage.Level.INFO);
+            return Optional.of(LogTableModel.Level.INFO);
         }
         return Optional.empty();
     }
