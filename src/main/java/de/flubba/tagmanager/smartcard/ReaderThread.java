@@ -92,10 +92,10 @@ public class ReaderThread extends Thread {
     private CardTerminal getFirstTerminal() throws NoSuchAlgorithmException, NoSuchProviderException, CardException,
             NoTerminalException {
         List<CardTerminal> terminals = getCardTerminals();
-        if (terminals.size() == 0) {
+        if (terminals.isEmpty()) {
             throw new NoTerminalException();
         }
-        CardTerminal terminal = terminals.get(0);
+        CardTerminal terminal = terminals.getFirst();
         if (!terminalPresent) {
             LOG_TABLE.addMessage(INFO, "NFC reader connected: " + terminal.getName());
             terminalPresent = true;

@@ -3,6 +3,7 @@ package de.flubba.tagmanager.ui;
 import de.flubba.tagmanager.smartcard.CardAction;
 import de.flubba.tagmanager.smartcard.ReaderThread;
 import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -17,6 +18,7 @@ import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
 
+@Slf4j
 public class LeftContent extends JPanel {
 
     private final JTabbedPane tabs = new JTabbedPane();
@@ -32,6 +34,7 @@ public class LeftContent extends JPanel {
     private void setReaderThread(CardAction cardAction) {
         if (currentReaderThread != null) {
             currentReaderThread.interrupt();
+            log.error("Waiting for current Reader to stop.");
             LOG_TABLE.addMessage(INFO, "Waiting for current Reader to stop.");
             try {
                 currentReaderThread.join(); // this will block the UI, but it should not take longer than a second
