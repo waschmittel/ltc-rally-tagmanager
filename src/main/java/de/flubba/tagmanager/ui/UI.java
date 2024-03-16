@@ -1,5 +1,6 @@
 package de.flubba.tagmanager.ui;
 
+import de.flubba.tagmanager.ui.logtable.LogTable;
 import de.flubba.tagmanager.util.OsType;
 
 import javax.swing.JFrame;

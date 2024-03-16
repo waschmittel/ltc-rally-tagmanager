@@ -1,4 +1,4 @@
-package de.flubba.tagmanager.ui;
+package de.flubba.tagmanager.ui.logtable;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -26,13 +26,13 @@ public class LogTable extends JPanel {
 
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault());
 
-    public void addMessage(LogMessage.Level level, String message) {
+    void addMessage(LogMessage.Level level, String message) {
         logMessages.addLogMessage(new LogMessage(level, formatter.format(Instant.now()), message));
         scrollPane.getViewport().updateUI();
     }
 
-    public record LogMessage(Level level, String datetime, String message) {
-        public enum Level {
+    record LogMessage(Level level, String datetime, String message) {
+        enum Level {
             ERROR, WARN, INFO
         }
     }
@@ -77,7 +77,7 @@ public class LogTable extends JPanel {
         private final ArrayList<LogMessage> messages = new ArrayList<>();
 
         public void addLogMessage(LogMessage logMessage) {
-            messages.add(0, logMessage);
+            messages.addFirst(logMessage);
         }
 
         private record Column<T>(String name, Class<T> clazz, Function<LogMessage, T> valueSupplier) {
@@ -111,11 +111,6 @@ public class LogTable extends JPanel {
         @Override
         public Class<?> getColumnClass(int columnIndex) {
             return COLUMNS.get(columnIndex).clazz;
-        }
-
-        @Override
-        public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return false;
         }
 
         @Override

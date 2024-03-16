@@ -2,24 +2,23 @@ package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.RunnerDto;
 import de.flubba.tagmanager.smartcard.WebTargetBuilder;
-import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
-import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.INFO;
-import static de.flubba.tagmanager.ui.UI.LOG_TABLE;
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
+@Slf4j
 public class LapCountingTab extends CardActionPanel {
     private final JLabel runnerNumber;
     private final JLabel runnerName;
@@ -99,17 +98,17 @@ public class LapCountingTab extends CardActionPanel {
     @Override
     public void doWithTagId(String tagId) {
         try {
-            LOG_TABLE.addMessage(INFO, "Counting lap for token " + tagId);
+            log.info("Counting lap for token {}", tagId);
             WebTarget target = WebTargetBuilder.getClient().path("countLap");
             target = target.queryParam("tagId", tagId);
             RunnerDto runner = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
-            LOG_TABLE.addMessage(INFO, String.format("Lap counted for %s (%s)", runner.name(), runner.id()));
+            log.info(String.format("Lap counted for %s (%s)", runner.name(), runner.id()));
             runnerName.setText(runner.name());
             runnerNumber.setText(runner.id().toString());
         } catch (WebApplicationException e) {
-            LOG_TABLE.addMessage(Level.ERROR, WebTargetBuilder.getErrorMessageFrom(e));
+            log.error(WebTargetBuilder.getErrorMessageFrom(e), e);
         } catch (RuntimeException e) {
-            LOG_TABLE.addMessage(Level.ERROR, ("Could not count lap: " + e.getMessage()));
+            log.error("Could not count lap: {}", e.getMessage(), e);
         }
 
     }

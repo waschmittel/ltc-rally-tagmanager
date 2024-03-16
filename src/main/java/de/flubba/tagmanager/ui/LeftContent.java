@@ -2,7 +2,6 @@ package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.smartcard.CardAction;
 import de.flubba.tagmanager.smartcard.ReaderThread;
-import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JPanel;
@@ -11,8 +10,6 @@ import javax.swing.SpringLayout;
 import java.awt.Dimension;
 import java.util.List;
 
-import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.INFO;
-import static de.flubba.tagmanager.ui.UI.LOG_TABLE;
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
@@ -34,15 +31,14 @@ public class LeftContent extends JPanel {
     private void setReaderThread(CardAction cardAction) {
         if (currentReaderThread != null) {
             currentReaderThread.interrupt();
-            log.error("Waiting for current Reader to stop.");
-            LOG_TABLE.addMessage(INFO, "Waiting for current Reader to stop.");
+            log.info("Waiting for current Reader to stop.");
             try {
                 currentReaderThread.join(); // this will block the UI, but it should not take longer than a second
             } catch (InterruptedException e) {
-                LOG_TABLE.addMessage(Level.ERROR, "I've been interrupted. This is weird.");
+                log.error("I've been interrupted. This is weird.");
                 Thread.currentThread().interrupt();
             }
-            LOG_TABLE.addMessage(INFO, "Current Reader stopped.");
+            log.info( "Current Reader stopped.");
         }
         currentReaderThread = new ReaderThread(cardAction);
         currentReaderThread.start();

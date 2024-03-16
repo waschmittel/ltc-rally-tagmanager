@@ -2,11 +2,11 @@ package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.AssignmentInformation;
 import de.flubba.tagmanager.smartcard.WebTargetBuilder;
-import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -15,8 +15,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
-import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.INFO;
-import static de.flubba.tagmanager.ui.UI.LOG_TABLE;
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
@@ -24,6 +22,7 @@ import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.BOTTOM;
 import static javax.swing.SwingConstants.CENTER;
 
+@Slf4j
 public class TagAssignmentTab extends CardActionPanel {
 
     private final JSpinner numberSpinner = new JSpinner(new SpinnerNumberModel(1L, 1L, 30000, 1L));
@@ -78,20 +77,20 @@ public class TagAssignmentTab extends CardActionPanel {
                     runnerNumber,
                     overwrite.isSelected()
             );
-            LOG_TABLE.addMessage(INFO, "Pushing " + tagId + " for runner " + assignmentInformation.runnerNumber());
+            log.info("Pushing {} for runner {}", tagId, assignmentInformation.runnerNumber());
             WebTarget target = WebTargetBuilder.getClient().path("setTagAssignment");
             target = target.queryParam("tagId", tagId)
                     .queryParam("runnerId", assignmentInformation.runnerNumber())
                     .queryParam("overwrite", assignmentInformation.overwrite());
             String response = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
-            LOG_TABLE.addMessage(INFO, response);
+            log.info(response);
             numberSpinner.setValue(assignmentInformation.runnerNumber() + 1L);
         } catch (WebApplicationException e) {
-            LOG_TABLE.addMessage(Level.ERROR, WebTargetBuilder.getErrorMessageFrom(e));
+            log.error(WebTargetBuilder.getErrorMessageFrom(e), e);
         } catch (NumberFormatException e) {
-            LOG_TABLE.addMessage(Level.ERROR, "Cannot register tag without a valid runner number: " + e.getMessage());
+            log.error("Cannot register tag without a valid runner number: {}", e.getMessage(), e);
         } catch (RuntimeException e) {
-            LOG_TABLE.addMessage(Level.ERROR, "Could not assign tag: " + e.getMessage());
+            log.error("Could not assign tag: {}", e.getMessage(), e);
         }
     }
 }

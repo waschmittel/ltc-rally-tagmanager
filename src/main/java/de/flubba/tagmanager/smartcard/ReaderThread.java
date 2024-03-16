@@ -1,5 +1,7 @@
 package de.flubba.tagmanager.smartcard;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.smartcardio.Card;
 import javax.smartcardio.CardChannel;
 import javax.smartcardio.CardException;
@@ -10,13 +12,9 @@ import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.util.List;
 
-import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.ERROR;
-import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.INFO;
-import static de.flubba.tagmanager.ui.UI.LOG_TABLE;
-
+@Slf4j
 public class ReaderThread extends Thread {
     private final CardAction cardCallback;
     private boolean terminalPresent = false;
@@ -44,7 +42,7 @@ public class ReaderThread extends Thread {
                 readTag(terminal);
             }
         } catch (Exception e) {
-            LOG_TABLE.addMessage(ERROR, "NFC reader error: " + e.getMessage());
+            log.error("NFC reader error: {}", e.getMessage());
             terminalPresent = false;
         }
     }
@@ -58,14 +56,14 @@ public class ReaderThread extends Thread {
                 try {
                     cardCallback.doWithTagId(readTagId(terminal));
                 } catch (Exception e) {
-                    LOG_TABLE.addMessage(ERROR, "Error processing card: " + e);
+                    log.error("Error processing card: {}", e.getMessage(), e);
                 }
             }
             for (int i = 0; i < 10 && !isInterrupted() && terminal.isCardPresent(); i++) {
                 terminal.waitForCardAbsent(500);
             }
         } catch (CardNotPresentException e) {
-            LOG_TABLE.addMessage(ERROR, "Whoops, too fast! Could not read the card:" + e.getMessage());
+            log.error("Whoops, too fast! Could not read the card: {}", e.getMessage(), e);
         }
     }
 
@@ -73,8 +71,7 @@ public class ReaderThread extends Thread {
         Card card = terminal.connect("*"); // connect with any card
         try {
             CardChannel channel = card.getBasicChannel();
-            ResponseAPDU response = channel.transmit(new CommandAPDU(new byte[]{(byte) 0xFF, (byte) 0xCA, (byte) 0x00,
-                    (byte) 0x00, (byte) 0x00}));
+            ResponseAPDU response = channel.transmit(new CommandAPDU(new byte[]{(byte) 0xFF, (byte) 0xCA, (byte) 0x00, (byte) 0x00, (byte) 0x00}));
             if (response.getSW1() == 0x63 && response.getSW2() == 0x00) {
                 throw new CardException("Got wrong response code");
             }
@@ -84,20 +81,19 @@ public class ReaderThread extends Thread {
         }
     }
 
-    private static List<CardTerminal> getCardTerminals() throws NoSuchAlgorithmException, NoSuchProviderException, CardException {
+    private static List<CardTerminal> getCardTerminals() throws NoSuchAlgorithmException, CardException {
         TerminalFactory factory = TerminalFactory.getInstance("PC/SC", null);
         return factory.terminals().list();
     }
 
-    private CardTerminal getFirstTerminal() throws NoSuchAlgorithmException, NoSuchProviderException, CardException,
-            NoTerminalException {
+    private CardTerminal getFirstTerminal() throws NoSuchAlgorithmException, CardException, NoTerminalException {
         List<CardTerminal> terminals = getCardTerminals();
         if (terminals.isEmpty()) {
             throw new NoTerminalException();
         }
         CardTerminal terminal = terminals.getFirst();
         if (!terminalPresent) {
-            LOG_TABLE.addMessage(INFO, "NFC reader connected: " + terminal.getName());
+            log.info("NFC reader connected: {}", terminal.getName());
             terminalPresent = true;
         }
         return terminal;

@@ -2,22 +2,21 @@ package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.TagAssignment;
 import de.flubba.tagmanager.smartcard.WebTargetBuilder;
-import de.flubba.tagmanager.ui.LogTable.LogMessage.Level;
 import jakarta.ws.rs.WebApplicationException;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JLabel;
 import javax.swing.SpringLayout;
 import java.awt.Font;
 
 import static de.flubba.tagmanager.smartcard.WebTargetBuilder.getErrorMessageFrom;
-import static de.flubba.tagmanager.ui.LogTable.LogMessage.Level.INFO;
-import static de.flubba.tagmanager.ui.UI.LOG_TABLE;
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
 import static javax.swing.SpringLayout.SOUTH;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
+@Slf4j
 public class TagQueryTab extends CardActionPanel {
     private final JLabel title = new JLabel();
     private final JLabel runnerNumberLabel;
@@ -93,16 +92,16 @@ public class TagQueryTab extends CardActionPanel {
     @Override
     public void doWithTagId(String tagId) {
         try {
-            LOG_TABLE.addMessage(INFO, "Getting information for tag " + tagId);
+            log.info("Getting information for tag {}", tagId);
             final var webTarget = WebTargetBuilder.getClient().path("getTagAssignment").queryParam("tagId", tagId);
             var assignment = webTarget.request().get(TagAssignment.class);
             tagIdLabel.setText(tagId);
             runnerNumberLabel.setText(assignment.runnerId().toString());
-            LOG_TABLE.addMessage(INFO, String.format("Tag %s is assigned to runner %s", assignment.tagId(), assignment.runnerId()));
+            log.info("Tag {} is assigned to runner {}", assignment.tagId(), assignment.runnerId());
         } catch (WebApplicationException e) {
-            LOG_TABLE.addMessage(Level.ERROR, getErrorMessageFrom(e));
+            log.error(getErrorMessageFrom(e), e);
         } catch (RuntimeException e) {
-            LOG_TABLE.addMessage(Level.ERROR, "Could not query tag: " + e.getMessage());
+            log.error("Could not query tag: {}", e.getMessage(), e);
         }
     }
 }
