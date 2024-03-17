@@ -1,6 +1,7 @@
 package de.flubba.tagmanager;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
+import de.flubba.tagmanager.discovery.MDNSListener;
 import de.flubba.tagmanager.ui.UI;
 import de.flubba.tagmanager.util.OsType;
 
@@ -25,6 +26,7 @@ public final class TagManager {
 
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
+        MDNSListener.listen();
         SwingUtilities.invokeLater(UI::createAndShow);
     }
 }

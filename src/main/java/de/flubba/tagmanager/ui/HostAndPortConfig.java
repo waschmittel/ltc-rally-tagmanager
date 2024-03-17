@@ -1,5 +1,8 @@
 package de.flubba.tagmanager.ui;
 
+import de.flubba.tagmanager.discovery.BackendDiscoveredEvent;
+import de.flubba.tagmanager.discovery.BackendDiscoveredEventListener;
+import de.flubba.tagmanager.discovery.BackendDiscoveredEventPublisher;
 import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import de.flubba.tagmanager.util.SimpleDocumentListener;
 
@@ -17,7 +20,7 @@ import static javax.swing.SpringLayout.VERTICAL_CENTER;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
-public class HostAndPortConfig extends JPanel {
+public class HostAndPortConfig extends JPanel implements BackendDiscoveredEventListener {
 
     public static final Color INVALID_BACKGROUND = new Color(255, 160, 160);
     private final JTextField hostField = new JTextField("localhost");
@@ -50,30 +53,20 @@ public class HostAndPortConfig extends JPanel {
         springLayout.putConstraint(WEST, hostField, 10, EAST, label);
         springLayout.putConstraint(WEST, portField, 0, EAST, hostField);
 
+        BackendDiscoveredEventPublisher.register(this);
+        BackendDiscoveredEventPublisher.getLastBackendDiscoveredEvent().ifPresent(this::listen);
+    }
 
+    @Override
+    public void listen(BackendDiscoveredEvent backendDiscoveredEvent) {
+        portField.setText(Integer.toString(backendDiscoveredEvent.port()));
+        hostField.setText(backendDiscoveredEvent.server());
     }
 
     private void updateWebClient() {
         Integer port = getPort();
-        String host = getHost();
 
         WebTargetBuilder.setHostAndPort(hostField.getText(), port);
-    }
-
-    private String getHost() {
-        String host = hostField.getText();
-        if (host.matches("[a-z\\d.]+") &&
-                !host.matches("\\..*") &&
-                !host.matches(".*\\.") &&
-                !host.matches(".*\\.\\..*")
-        ) {
-            hostField.setBackground(defaultBackground);
-            hostField.setToolTipText(null);
-            return host;
-        }
-        hostField.setBackground(INVALID_BACKGROUND);
-        hostField.setToolTipText("this is not a valid host");
-        return null;
     }
 
     private Integer getPort() {

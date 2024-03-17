@@ -156,14 +156,9 @@
             <property name="exceptionVariableName" value="expected"/>
         </module>
         <module name="AbbreviationAsWordInName">
-            <property name="allowedAbbreviationLength" value="2"/>
-        </module>
-        <module name="AbbreviationAsWordInName">
+            <property name="allowedAbbreviationLength" value="5"/>
             <message key="abbreviation.as.word"
                      value="Abbreviation in name ''{0}'' must contain no more than ''{1}'' consecutive capital letters!!!"/>
-        </module>
-        <module name="AbbreviationAsWordInName">
-            <property name="allowedAbbreviationLength" value="32"/>
         </module>
         <module name="CatchParameterName"/>
         <module name="TodoComment">

@@ -80,6 +80,11 @@
             <version>1.18.30</version>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.jmdns</groupId>
+            <artifactId>jmdns</artifactId>
+            <version>3.5.9</version>
+        </dependency>
     </dependencies>
 
     <build>
