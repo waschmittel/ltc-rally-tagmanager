@@ -1,6 +1,6 @@
 package de.flubba.tagmanager;
 
-public record AssignmentInformation(
+public record TagAssignmentInformation(
         Long runnerNumber,
         Boolean overwrite
 ) {}

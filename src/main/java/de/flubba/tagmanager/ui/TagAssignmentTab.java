@@ -1,10 +1,9 @@
 package de.flubba.tagmanager.ui;
 
-import de.flubba.tagmanager.AssignmentInformation;
+import de.flubba.tagmanager.TagAssignmentInformation;
 import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,24 +62,17 @@ public class TagAssignmentTab extends CardActionPanel {
     @Override
     public void doWithTagId(String tagId) {
         try {
-            Long runnerNumber = numberSpinner.getValue() instanceof Long number ? number :
-                    numberSpinner.getValue() instanceof Integer integer ? integer.longValue() :
-                            numberSpinner.getValue() instanceof Double doubleNum ? doubleNum.longValue() : null;
-            if (runnerNumber == null) {
-                throw new NumberFormatException("value of field is not an Integer");
-            }
-            AssignmentInformation assignmentInformation = new AssignmentInformation(
-                    runnerNumber,
-                    overwrite.isSelected()
-            );
-            log.info("Pushing {} for runner {}", tagId, assignmentInformation.runnerNumber());
-            WebTarget target = WebTargetBuilder.build().path("setTagAssignment");
-            target = target.queryParam("tagId", tagId)
-                    .queryParam("runnerId", assignmentInformation.runnerNumber())
-                    .queryParam("overwrite", assignmentInformation.overwrite());
-            String response = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
+            var tagAssignmentInformation = getTagAssignmentInformation();
+            log.info("Pushing {} for runner {}", tagId, tagAssignmentInformation.runnerNumber());
+            String response = WebTargetBuilder.build()
+                    .path("setTagAssignment")
+                    .queryParam("tagId", tagId)
+                    .queryParam("runnerId", tagAssignmentInformation.runnerNumber())
+                    .queryParam("overwrite", tagAssignmentInformation.overwrite())
+                    .request()
+                    .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
             log.info(response);
-            numberSpinner.setValue(assignmentInformation.runnerNumber() + 1L);
+            numberSpinner.setValue(tagAssignmentInformation.runnerNumber() + 1L);
         } catch (WebApplicationException e) {
             log.error(WebTargetBuilder.getErrorMessageFrom(e), e);
         } catch (NumberFormatException e) {
@@ -88,5 +80,18 @@ public class TagAssignmentTab extends CardActionPanel {
         } catch (RuntimeException e) {
             log.error("Could not assign tag: {}", e.getMessage(), e);
         }
+    }
+
+    private TagAssignmentInformation getTagAssignmentInformation() {
+        Long runnerNumber = switch (numberSpinner.getValue()) {
+            case Long longValue -> longValue;
+            case Integer integerValue -> integerValue.longValue();
+            case Double doubleValue -> doubleValue.longValue();
+            default -> throw new NumberFormatException("value of field is not a number");
+        };
+        return new TagAssignmentInformation(
+                runnerNumber,
+                overwrite.isSelected()
+        );
     }
 }
