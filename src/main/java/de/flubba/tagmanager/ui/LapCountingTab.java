@@ -4,7 +4,6 @@ import de.flubba.tagmanager.RunnerDto;
 import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -98,10 +97,12 @@ public class LapCountingTab extends CardActionPanel {
     public void doWithTagId(String tagId) {
         try {
             log.info("Counting lap for token {}", tagId);
-            WebTarget target = WebTargetBuilder.build().path("countLap");
-            target = target.queryParam("tagId", tagId);
-            RunnerDto runner = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
-            log.info(String.format("Lap counted for %s (%s)", runner.name(), runner.id()));
+            RunnerDto runner = WebTargetBuilder.build()
+                    .path("countLap")
+                    .queryParam("tagId", tagId)
+                    .request()
+                    .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
+            log.info("Lap counted for {} ({})", runner.name(), runner.id());
             runnerName.setText(runner.name());
             runnerNumber.setText(runner.id().toString());
         } catch (WebApplicationException e) {
