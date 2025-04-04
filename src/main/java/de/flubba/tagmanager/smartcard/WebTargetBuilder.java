@@ -1,11 +1,11 @@
 package de.flubba.tagmanager.smartcard;
 
 import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.WebTarget;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,13 +13,15 @@ import java.io.InputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class WebTargetBuilder {
+    private static final Client CLIENT = ClientBuilder.newClient();
     private static WebTarget clientConfig = null;
 
     public static void setHostAndPort(String hostname, Integer port) {
         if (hostname == null || port == null) {
             clientConfig = null;
         }
-        clientConfig = ClientBuilder.newClient(new ClientConfig()).target("http://%s:%s".formatted(hostname, port));
+        //noinspection HttpUrlsUsage -- this is designed for auto-discovery in an airgapped network, so http is fine
+        clientConfig = CLIENT.target("http://%s:%s".formatted(hostname, port));
     }
 
     public static WebTarget getClient() {
