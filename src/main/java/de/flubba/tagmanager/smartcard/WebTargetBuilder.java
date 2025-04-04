@@ -31,9 +31,6 @@ public final class WebTargetBuilder {
         return clientConfig;
     }
 
-    private WebTargetBuilder() {
-    }
-
     public static String getErrorMessageFrom(WebApplicationException e) {
         Object entity = e.getResponse().getEntity();
         if (entity instanceof InputStream inputStream) {
@@ -50,4 +47,7 @@ public final class WebTargetBuilder {
         return "Error: Could not get error message.";
     }
 
+    // this is just a helper class with static methods
+    private WebTargetBuilder() {
+    }
 }
