@@ -91,12 +91,15 @@ public class TagQueryTab extends CardActionPanel {
     @Override
     public void doWithTagId(String tagId) {
         try {
-            log.info("Getting information for tag {}", tagId);
-            final var webTarget = WebTargetBuilder.build().path("getTagAssignment").queryParam("tagId", tagId);
-            var assignment = webTarget.request().get(TagAssignment.class);
+            log.info("Getting information for tag {}", tagId); // TODO: extract server communication, put in same package as WebTargetBuilder
+            var tagAssignment = WebTargetBuilder.build()
+                    .path("getTagAssignment")
+                    .queryParam("tagId", tagId)
+                    .request()
+                    .get(TagAssignment.class);
             tagIdLabel.setText(tagId);
-            runnerNumberLabel.setText(assignment.runnerId().toString());
-            log.info("Tag {} is assigned to runner {}", assignment.tagId(), assignment.runnerId());
+            runnerNumberLabel.setText(tagAssignment.runnerId().toString());
+            log.info("Tag {} is assigned to runner {}", tagAssignment.tagId(), tagAssignment.runnerId());
         } catch (WebApplicationException e) {
             log.error(getErrorMessageFrom(e), e);
         } catch (RuntimeException e) {
