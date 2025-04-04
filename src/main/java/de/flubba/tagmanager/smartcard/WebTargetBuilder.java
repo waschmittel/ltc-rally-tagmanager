@@ -24,7 +24,7 @@ public final class WebTargetBuilder {
         clientConfig = CLIENT.target("http://%s:%s".formatted(hostname, port));
     }
 
-    public static WebTarget getClient() {
+    public static WebTarget build() {
         if (clientConfig == null) {
             throw new IllegalArgumentException("no valid host/port set");
         }

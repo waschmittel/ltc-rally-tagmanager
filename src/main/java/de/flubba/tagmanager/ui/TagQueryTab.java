@@ -5,9 +5,8 @@ import de.flubba.tagmanager.smartcard.WebTargetBuilder;
 import jakarta.ws.rs.WebApplicationException;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.JLabel;
-import javax.swing.SpringLayout;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 
 import static de.flubba.tagmanager.smartcard.WebTargetBuilder.getErrorMessageFrom;
 import static javax.swing.SpringLayout.EAST;
@@ -93,7 +92,7 @@ public class TagQueryTab extends CardActionPanel {
     public void doWithTagId(String tagId) {
         try {
             log.info("Getting information for tag {}", tagId);
-            final var webTarget = WebTargetBuilder.getClient().path("getTagAssignment").queryParam("tagId", tagId);
+            final var webTarget = WebTargetBuilder.build().path("getTagAssignment").queryParam("tagId", tagId);
             var assignment = webTarget.request().get(TagAssignment.class);
             tagIdLabel.setText(tagId);
             runnerNumberLabel.setText(assignment.runnerId().toString());

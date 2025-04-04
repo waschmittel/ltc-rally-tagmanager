@@ -8,9 +8,8 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.JLabel;
-import javax.swing.SpringLayout;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -99,7 +98,7 @@ public class LapCountingTab extends CardActionPanel {
     public void doWithTagId(String tagId) {
         try {
             log.info("Counting lap for token {}", tagId);
-            WebTarget target = WebTargetBuilder.getClient().path("countLap");
+            WebTarget target = WebTargetBuilder.build().path("countLap");
             target = target.queryParam("tagId", tagId);
             RunnerDto runner = target.request().post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
             log.info(String.format("Lap counted for %s (%s)", runner.name(), runner.id()));

@@ -8,12 +8,8 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SpringLayout;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -78,7 +74,7 @@ public class TagAssignmentTab extends CardActionPanel {
                     overwrite.isSelected()
             );
             log.info("Pushing {} for runner {}", tagId, assignmentInformation.runnerNumber());
-            WebTarget target = WebTargetBuilder.getClient().path("setTagAssignment");
+            WebTarget target = WebTargetBuilder.build().path("setTagAssignment");
             target = target.queryParam("tagId", tagId)
                     .queryParam("runnerId", assignmentInformation.runnerNumber())
                     .queryParam("overwrite", assignmentInformation.overwrite());
