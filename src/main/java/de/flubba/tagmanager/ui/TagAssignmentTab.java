@@ -1,10 +1,7 @@
 package de.flubba.tagmanager.ui;
 
-import de.flubba.tagmanager.TagAssignmentInformation;
-import de.flubba.tagmanager.smartcard.WebTargetBuilder;
+import de.flubba.tagmanager.smartcard.ServerCommunication;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -62,19 +59,13 @@ public class TagAssignmentTab extends CardActionPanel {
     @Override
     public void doWithTagId(String tagId) {
         try {
-            var tagAssignmentInformation = getTagAssignmentInformation();
-            log.info("Pushing {} for runner {}", tagId, tagAssignmentInformation.runnerNumber());
-            String response = WebTargetBuilder.build()
-                    .path("setTagAssignment")
-                    .queryParam("tagId", tagId)
-                    .queryParam("runnerId", tagAssignmentInformation.runnerNumber())
-                    .queryParam("overwrite", tagAssignmentInformation.overwrite())
-                    .request()
-                    .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
+            var runnerNumber = getRunnerNumber();
+            log.info("Pushing {} for runner {}", tagId, runnerNumber);
+            var response = ServerCommunication.assignTag(tagId, runnerNumber, overwrite.isSelected());
             log.info(response);
-            numberSpinner.setValue(tagAssignmentInformation.runnerNumber() + 1L);
+            numberSpinner.setValue(runnerNumber + 1L);
         } catch (WebApplicationException e) {
-            log.error(WebTargetBuilder.getErrorMessageFrom(e), e);
+            ServerCommunication.logWebApplicationException(e);
         } catch (NumberFormatException e) {
             log.error("Cannot register tag without a valid runner number: {}", e.getMessage(), e);
         } catch (RuntimeException e) {
@@ -82,16 +73,12 @@ public class TagAssignmentTab extends CardActionPanel {
         }
     }
 
-    private TagAssignmentInformation getTagAssignmentInformation() {
-        Long runnerNumber = switch (numberSpinner.getValue()) {
+    private Long getRunnerNumber() {
+        return switch (numberSpinner.getValue()) {
             case Long longValue -> longValue;
             case Integer integerValue -> integerValue.longValue();
             case Double doubleValue -> doubleValue.longValue();
             default -> throw new NumberFormatException("value of field is not a number");
         };
-        return new TagAssignmentInformation(
-                runnerNumber,
-                overwrite.isSelected()
-        );
     }
 }

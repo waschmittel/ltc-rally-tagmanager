@@ -3,15 +3,11 @@ package de.flubba.tagmanager.ui;
 import de.flubba.tagmanager.discovery.BackendDiscoveredEvent;
 import de.flubba.tagmanager.discovery.BackendDiscoveredEventListener;
 import de.flubba.tagmanager.discovery.BackendDiscoveredEventPublisher;
-import de.flubba.tagmanager.smartcard.WebTargetBuilder;
+import de.flubba.tagmanager.smartcard.ServerCommunication;
 import de.flubba.tagmanager.util.SimpleDocumentListener;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
-import java.awt.Color;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -32,10 +28,10 @@ public class HostAndPortConfig extends JPanel implements BackendDiscoveredEventL
         setLayout(springLayout);
 
         hostField.setHorizontalAlignment(CENTER);
-        hostField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateWebClient);
+        hostField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateServerConfig);
 
         portField.setHorizontalAlignment(CENTER);
-        portField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateWebClient);
+        portField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateServerConfig);
 
         var label = new JLabel("host/port:");
         portField.setPreferredSize(new Dimension(100, portField.getPreferredSize().height));
@@ -63,10 +59,8 @@ public class HostAndPortConfig extends JPanel implements BackendDiscoveredEventL
         hostField.setText(backendDiscoveredEvent.server());
     }
 
-    private void updateWebClient() {
-        Integer port = getPort();
-
-        WebTargetBuilder.setHostAndPort(hostField.getText(), port);
+    private void updateServerConfig() {
+        ServerCommunication.setHostAndPort(hostField.getText(), getPort());
     }
 
     private Integer getPort() {

@@ -1,10 +1,7 @@
 package de.flubba.tagmanager.ui;
 
-import de.flubba.tagmanager.RunnerDto;
-import de.flubba.tagmanager.smartcard.WebTargetBuilder;
+import de.flubba.tagmanager.smartcard.ServerCommunication;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;
@@ -97,19 +94,14 @@ public class LapCountingTab extends CardActionPanel {
     public void doWithTagId(String tagId) {
         try {
             log.info("Counting lap for token {}", tagId);
-            RunnerDto runner = WebTargetBuilder.build()
-                    .path("countLap")
-                    .queryParam("tagId", tagId)
-                    .request()
-                    .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
+            var runner = ServerCommunication.countLap(tagId);
             log.info("Lap counted for {} ({})", runner.name(), runner.id());
             runnerName.setText(runner.name());
             runnerNumber.setText(runner.id().toString());
         } catch (WebApplicationException e) {
-            log.error(WebTargetBuilder.getErrorMessageFrom(e), e);
+            ServerCommunication.logWebApplicationException(e);
         } catch (RuntimeException e) {
             log.error("Could not count lap: {}", e.getMessage(), e);
         }
-
     }
 }

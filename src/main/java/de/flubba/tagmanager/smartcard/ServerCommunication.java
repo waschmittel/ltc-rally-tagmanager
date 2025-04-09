@@ -1,9 +1,14 @@
 package de.flubba.tagmanager.smartcard;
 
+import de.flubba.tagmanager.RunnerDto;
+import de.flubba.tagmanager.TagAssignment;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
+import jakarta.ws.rs.core.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +17,8 @@ import java.io.InputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-public final class WebTargetBuilder {
+@Slf4j
+public final class ServerCommunication {
     private static final Client CLIENT = ClientBuilder.newClient();
     private static WebTarget clientConfig = null;
 
@@ -24,14 +30,44 @@ public final class WebTargetBuilder {
         clientConfig = CLIENT.target("http://%s:%s".formatted(hostname, port));
     }
 
-    public static WebTarget build() {
+    private static WebTarget buildWebTarget() {
         if (clientConfig == null) {
             throw new IllegalArgumentException("no valid host/port set");
         }
         return clientConfig;
     }
 
-    public static String getErrorMessageFrom(WebApplicationException e) {
+    public static RunnerDto countLap(String tagId) {
+        return ServerCommunication.buildWebTarget()
+                .path("countLap")
+                .queryParam("tagId", tagId)
+                .request()
+                .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
+    }
+
+    public static String assignTag(String tagId, Long runnerNumber, boolean overwrite) {
+        return ServerCommunication.buildWebTarget()
+                .path("setTagAssignment")
+                .queryParam("tagId", tagId)
+                .queryParam("runnerId", runnerNumber)
+                .queryParam("overwrite", overwrite)
+                .request()
+                .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
+    }
+
+    public static TagAssignment getTagAssignment(String tagId) {
+        return ServerCommunication.buildWebTarget()
+                .path("getTagAssignment")
+                .queryParam("tagId", tagId)
+                .request()
+                .get(TagAssignment.class);
+    }
+
+    public static void logWebApplicationException(WebApplicationException e) {
+        log.error(getErrorMessageFrom(e), e);
+    }
+
+    private static String getErrorMessageFrom(WebApplicationException e) {
         Object entity = e.getResponse().getEntity();
         if (entity instanceof InputStream inputStream) {
             try {
@@ -48,6 +84,6 @@ public final class WebTargetBuilder {
     }
 
     // this is just a helper class with static methods
-    private WebTargetBuilder() {
+    private ServerCommunication() {
     }
 }
