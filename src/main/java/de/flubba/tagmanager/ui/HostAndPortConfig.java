@@ -6,7 +6,7 @@ import de.flubba.tagmanager.discovery.BackendDiscoveredEventPublisher;
 import de.flubba.tagmanager.smartcard.ServerCommunication;
 import de.flubba.tagmanager.util.SimpleDocumentListener;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class HostAndPortConfig extends HostAndPortConfigLayout implements BackendDiscoveredEventListener {
     private static final Color INVALID_BACKGROUND = new Color(255, 160, 160);

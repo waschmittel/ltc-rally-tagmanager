@@ -2,8 +2,9 @@ package de.flubba.tagmanager.ui;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.SpringLayout;
+import java.awt.Font;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -16,7 +17,7 @@ abstract class TagQueryTabLayout extends CardActionPanel {
     protected final JLabel runnerNumberLabel;
     protected final JLabel tagIdLabel;
 
-    public TagQueryTabLayout() {
+    TagQueryTabLayout() {
         var title = buildTitle();
         tagIdLabel = buildTagIdLabel();
         runnerNumberLabel = buildNumberLabel();

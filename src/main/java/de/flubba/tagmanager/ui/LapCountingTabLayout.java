@@ -2,8 +2,9 @@ package de.flubba.tagmanager.ui;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.SpringLayout;
+import java.awt.Font;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -16,7 +17,7 @@ abstract class LapCountingTabLayout extends CardActionPanel {
     protected final JLabel runnerNumber;
     protected final JLabel runnerName;
 
-    public LapCountingTabLayout() {
+    LapCountingTabLayout() {
         var title = buildTitle();
         runnerNumber = buildRunnerNumber();
         runnerName = buildRunnerName();

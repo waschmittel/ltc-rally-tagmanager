@@ -1,7 +1,11 @@
 package de.flubba.tagmanager.ui;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SpringLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -19,7 +23,7 @@ public class HostAndPortConfigLayout extends JPanel {
     protected final JTextField portField = new JTextField("8080");
     Color defaultBackground = portField.getBackground();
 
-    public HostAndPortConfigLayout() {
+    HostAndPortConfigLayout() {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
 

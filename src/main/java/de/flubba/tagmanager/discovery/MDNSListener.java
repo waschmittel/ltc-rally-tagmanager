@@ -22,7 +22,7 @@ public final class MDNSListener {
         }
     }
 
-    private static class EventPublishingListener implements ServiceListener {
+    private static final class EventPublishingListener implements ServiceListener {
         @Override
         public void serviceAdded(ServiceEvent event) {
             // not needed, serviceResolved() is sufficient

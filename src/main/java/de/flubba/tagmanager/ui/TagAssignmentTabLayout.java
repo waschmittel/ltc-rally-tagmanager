@@ -2,8 +2,12 @@ package de.flubba.tagmanager.ui;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.SpringLayout;
+import java.awt.Font;
 
 import static javax.swing.SpringLayout.EAST;
 import static javax.swing.SpringLayout.NORTH;
@@ -18,7 +22,7 @@ abstract class TagAssignmentTabLayout extends CardActionPanel {
     protected final JSpinner numberSpinner = new JSpinner(new SpinnerNumberModel(1L, 1L, 30000, 1L));
     protected final JCheckBox overwrite = new JCheckBox("overwrite existing assignment");
 
-    public TagAssignmentTabLayout() {
+    TagAssignmentTabLayout() {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
         var nextNumberLabel = new JLabel("next number to assign:");
