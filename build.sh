@@ -13,7 +13,7 @@ jpackage \
     --input . --icon ../res/icon/app-icon.icns \
     --main-jar tagmanager.jar \
     --about-url 'https://github.com/waschmittel/ltc-rally-tagmanager' \
-    --copyright '(C) 2024 Daniel Flassak' \
+    --copyright '(C) 2025 Daniel Flassak' \
     --description 'Client for LTC Rallye Software for assigning NFC tags and counting laps.' \
     --vendor 'Flubba' \
     --app-version '3.141592'
