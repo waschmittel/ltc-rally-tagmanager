@@ -10,10 +10,14 @@ public class TagQueryTab extends TagQueryTabLayout {
     public void doWithTagId(String tagId) {
         try {
             log.info("Getting information for tag {}", tagId);
-            var tagAssignment = ServerCommunication.getTagAssignment(tagId);
+            ServerCommunication.getTagAssignment(tagId).ifPresentOrElse(tagAssignment -> {
+                runnerNumberLabel.setText(tagAssignment.runnerId().toString());
+                log.info("Tag {} is assigned to runner {}", tagAssignment.tagId(), tagAssignment.runnerId());
+            }, () -> {
+                runnerNumberLabel.setText("-");
+                log.warn("No assignment found for tag {}", tagId);
+            });
             tagIdLabel.setText(tagId);
-            runnerNumberLabel.setText(tagAssignment.runnerId().toString());
-            log.info("Tag {} is assigned to runner {}", tagAssignment.tagId(), tagAssignment.runnerId());
         } catch (WebApplicationException e) {
             ServerCommunication.logWebApplicationException(e);
         } catch (RuntimeException e) {

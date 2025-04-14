@@ -2,6 +2,7 @@ package de.flubba.tagmanager.smartcard;
 
 import de.flubba.tagmanager.RunnerDto;
 import de.flubba.tagmanager.TagAssignment;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -14,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -55,12 +57,18 @@ public final class ServerCommunication {
                 .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
     }
 
-    public static TagAssignment getTagAssignment(String tagId) {
-        return ServerCommunication.buildWebTarget()
-                .path("getTagAssignment")
-                .queryParam("tagId", tagId)
-                .request()
-                .get(TagAssignment.class);
+    public static Optional<TagAssignment> getTagAssignment(String tagId) {
+        try {
+            return Optional.of(
+                    ServerCommunication.buildWebTarget()
+                            .path("getTagAssignment")
+                            .queryParam("tagId", tagId)
+                            .request()
+                            .get(TagAssignment.class)
+            );
+        } catch (NotFoundException notFoundException) {
+            return Optional.empty();
+        }
     }
 
     public static void logWebApplicationException(WebApplicationException e) {
