@@ -2,13 +2,13 @@ package de.flubba.tagmanager.smartcard;
 
 import de.flubba.tagmanager.RunnerDto;
 import de.flubba.tagmanager.TagAssignment;
+import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.client.WebTarget;
-import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.Response.Status.CONFLICT;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
@@ -39,22 +41,42 @@ public final class ServerCommunication {
         return clientConfig;
     }
 
-    public static RunnerDto countLap(String tagId) {
-        return ServerCommunication.buildWebTarget()
-                .path("countLap")
-                .queryParam("tagId", tagId)
-                .request()
-                .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), RunnerDto.class);
+    public static Optional<RunnerDto> countLap(String tagId) {
+        try {
+            return Optional.of(
+                    ServerCommunication.buildWebTarget()
+                            .path("countLap")
+                            .queryParam("tagId", tagId)
+                            .request()
+                            .post(Entity.entity(String.class, APPLICATION_JSON), RunnerDto.class)
+            );
+        } catch (ClientErrorException clientErrorException) {
+            if (clientErrorException.getResponse().getStatus() == CONFLICT.getStatusCode()) {
+                log.warn("Lap too short. Full response: {}", clientErrorException.getResponse().readEntity(String.class));
+                return Optional.empty();
+            }
+            throw clientErrorException;
+        }
     }
 
-    public static String assignTag(String tagId, Long runnerNumber, boolean overwrite) {
-        return ServerCommunication.buildWebTarget()
-                .path("setTagAssignment")
-                .queryParam("tagId", tagId)
-                .queryParam("runnerId", runnerNumber)
-                .queryParam("overwrite", overwrite)
-                .request()
-                .post(Entity.entity(String.class, MediaType.APPLICATION_JSON), String.class);
+    public static Optional<String> assignTag(String tagId, Long runnerNumber, boolean overwrite) {
+        try {
+            return Optional.of(
+                    ServerCommunication.buildWebTarget()
+                            .path("setTagAssignment")
+                            .queryParam("tagId", tagId)
+                            .queryParam("runnerId", runnerNumber)
+                            .queryParam("overwrite", overwrite)
+                            .request()
+                            .post(Entity.entity(String.class, APPLICATION_JSON), String.class)
+            );
+        } catch (ClientErrorException clientErrorException) {
+            if (clientErrorException.getResponse().getStatus() == CONFLICT.getStatusCode()) {
+                log.error("Tag already assigned. Full response: {}", clientErrorException.getResponse().readEntity(String.class));
+                return Optional.empty();
+            }
+            throw clientErrorException;
+        }
     }
 
     public static Optional<TagAssignment> getTagAssignment(String tagId) {

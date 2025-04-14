@@ -11,9 +11,10 @@ public class TagAssignmentTab extends TagAssignmentTabLayout {
         try {
             var runnerNumber = getRunnerNumber();
             log.info("Pushing {} for runner {}", tagId, runnerNumber);
-            var response = ServerCommunication.assignTag(tagId, runnerNumber, overwrite.isSelected());
-            log.info(response);
-            numberSpinner.setValue(runnerNumber + 1L);
+            ServerCommunication.assignTag(tagId, runnerNumber, overwrite.isSelected()).ifPresent(response -> {
+                log.info(response);
+                numberSpinner.setValue(runnerNumber + 1L);
+            });
         } catch (WebApplicationException e) {
             ServerCommunication.logWebApplicationException(e);
         } catch (NumberFormatException e) {

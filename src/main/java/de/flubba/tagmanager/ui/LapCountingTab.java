@@ -10,10 +10,11 @@ public class LapCountingTab extends LapCountingTabLayout {
     public void doWithTagId(String tagId) {
         try {
             log.info("Counting lap for token {}", tagId);
-            var runner = ServerCommunication.countLap(tagId);
-            log.info("Lap counted for {} ({})", runner.name(), runner.id());
-            runnerName.setText(runner.name());
-            runnerNumber.setText(runner.id().toString());
+            ServerCommunication.countLap(tagId).ifPresent(runner -> {
+                log.info("Lap counted for {} ({})", runner.name(), runner.id());
+                runnerName.setText(runner.name());
+                runnerNumber.setText(runner.id().toString());
+            });
         } catch (WebApplicationException e) {
             ServerCommunication.logWebApplicationException(e);
         } catch (RuntimeException e) {
