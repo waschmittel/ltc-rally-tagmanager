@@ -20,10 +20,14 @@ import java.util.Optional;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static jakarta.ws.rs.core.Response.Status.CONFLICT;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
+import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
 
 @Slf4j
 public final class ServerCommunication {
-    private static final Client CLIENT = ClientBuilder.newClient();
+    private static final Client CLIENT = ClientBuilder.newClient()
+            .property(CONNECT_TIMEOUT, 2000)
+            .property(READ_TIMEOUT, 2000);
     private static WebTarget clientConfig = null;
 
     public static void setHostAndPort(String hostname, Integer port) {
@@ -90,6 +94,18 @@ public final class ServerCommunication {
             );
         } catch (NotFoundException notFoundException) {
             return Optional.empty();
+        }
+    }
+
+    public static boolean ping() {
+        try {
+            var response = ServerCommunication.buildWebTarget()
+                    .path("ping")
+                    .request()
+                    .get();
+            return response.getStatus() == 200;
+        } catch (Exception e) {
+            return false;
         }
     }
 
