@@ -1,6 +1,5 @@
 package de.flubba.tagmanager.ui;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -18,9 +17,10 @@ import static javax.swing.SpringLayout.VERTICAL_CENTER;
 import static javax.swing.SpringLayout.WEST;
 import static javax.swing.SwingConstants.CENTER;
 
-public class HostAndPortConfigLayout extends JPanel {
+abstract class HostAndPortConfigLayout extends JPanel {
     protected final JTextField hostField = new JTextField("localhost");
     protected final JTextField portField = new JTextField("8080");
+    protected final ConnectivityLabel connectivityLabel = new ConnectivityLabel();
     Color defaultBackground = portField.getBackground();
 
     HostAndPortConfigLayout() {
@@ -34,22 +34,25 @@ public class HostAndPortConfigLayout extends JPanel {
         requireDoubleClickToFocus(hostField);
         requireDoubleClickToFocus(portField);
 
-        var label = new JLabel("host/port:");
+        var label = new javax.swing.JLabel("host/port:");
         portField.setPreferredSize(new Dimension(100, portField.getPreferredSize().height));
         portField.setMaximumSize(new Dimension(100, portField.getPreferredSize().height));
 
         add(label);
         add(hostField);
         add(portField);
+        add(connectivityLabel);
 
-        springLayout.putConstraint(VERTICAL_CENTER, label, 0, VERTICAL_CENTER, this);
+        springLayout.putConstraint(VERTICAL_CENTER, label, 0, VERTICAL_CENTER, hostField);
         springLayout.putConstraint(NORTH, this, 0, NORTH, portField);
-        springLayout.putConstraint(SOUTH, this, 0, SOUTH, portField);
+        springLayout.putConstraint(SOUTH, this, 10, SOUTH, connectivityLabel);
         springLayout.putConstraint(WEST, label, 10, WEST, this);
         springLayout.putConstraint(EAST, this, 5, EAST, portField);
         springLayout.putConstraint(WEST, hostField, 10, EAST, label);
         springLayout.putConstraint(WEST, portField, 0, EAST, hostField);
-
+        springLayout.putConstraint(NORTH, connectivityLabel, 10, SOUTH, hostField);
+        springLayout.putConstraint(WEST, connectivityLabel, 0, WEST, label);
+        springLayout.putConstraint(EAST, connectivityLabel, 0, EAST, portField);
     }
 
     void requireDoubleClickToFocus(JTextField jTextField) {
