@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.Color;
 import java.awt.Font;
 
+import static java.awt.Color.DARK_GRAY;
 import static java.awt.Color.RED;
 
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ class LevelRenderer extends DefaultTableCellRenderer {
                 case ERROR -> RED;
                 case WARN -> DARK_YELLOW;
                 case INFO -> DARK_GREEN;
+                case DEBUG -> DARK_GRAY;
             });
             setText(level.toString());
             setFont(levelFont);

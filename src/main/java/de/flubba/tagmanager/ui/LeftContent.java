@@ -66,14 +66,19 @@ public class LeftContent extends JPanel {
         tabs.setSelectedIndex(2);
 
         var hostAndPortConfig = new HostAndPortConfig();
+        var logSettings = new LogSettings();
 
         add(hostAndPortConfig);
+        add(logSettings);
         add(tabs);
 
         springLayout.putConstraint(NORTH, hostAndPortConfig, 0, NORTH, this);
         springLayout.putConstraint(EAST, hostAndPortConfig, 0, EAST, this);
         springLayout.putConstraint(WEST, hostAndPortConfig, 0, WEST, this);
-        springLayout.putConstraint(NORTH, tabs, 6, SOUTH, hostAndPortConfig);
+        springLayout.putConstraint(NORTH, logSettings, 6, SOUTH, hostAndPortConfig);
+        springLayout.putConstraint(WEST, logSettings, 0, WEST, this);
+        springLayout.putConstraint(EAST, logSettings, 0, EAST, this);
+        springLayout.putConstraint(NORTH, tabs, 6, SOUTH, logSettings);
         springLayout.putConstraint(WEST, this, 0, WEST, hostAndPortConfig);
         springLayout.putConstraint(EAST, this, 0, EAST, hostAndPortConfig);
         springLayout.putConstraint(WEST, this, 0, WEST, tabs);

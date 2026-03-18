@@ -19,7 +19,7 @@ class LogTableModel extends AbstractTableModel {
     private final ArrayList<TableLogMessage> messages = new ArrayList<>();
 
     enum Level {
-        ERROR, WARN, INFO
+        ERROR, WARN, INFO, DEBUG
     }
 
     private record TableLogMessage(Level level, String datetime, String message) {}

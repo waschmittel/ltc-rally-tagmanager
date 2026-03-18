@@ -99,7 +99,7 @@ public final class ServerCommunication {
 
     public static boolean ping() {
         try {
-            log.debug("Pinging server {}:{}", clientConfig.getUri().getHost(), clientConfig.getUri().getPort()); // TODO: add option to display debug log in frontend - maybe remember it, too (next to port/host)
+            log.debug("Pinging server {}:{}", clientConfig.getUri().getHost(), clientConfig.getUri().getPort());
             var response = ServerCommunication.buildWebTarget()
                     .path("ping")
                     .request()
