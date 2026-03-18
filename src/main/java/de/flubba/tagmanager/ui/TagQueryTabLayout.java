@@ -1,9 +1,12 @@
 package de.flubba.tagmanager.ui;
 
 import lombok.extern.slf4j.Slf4j;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.JLabel;
 import javax.swing.SpringLayout;
+import java.awt.Color;
 import java.awt.Font;
 
 import static javax.swing.SpringLayout.EAST;
@@ -69,18 +72,14 @@ abstract class TagQueryTabLayout extends CardActionPanel {
     }
 
     private static JLabel buildTitle() {
-        JLabel title = new JLabel("💡");
+        FontIcon icon = FontIcon.of(FontAwesomeSolid.SEARCH, 150, new Color(33, 150, 243));
+        JLabel title = new JLabel(icon);
         title.setHorizontalAlignment(CENTER);
-        title.setFont(new Font(
-                "Arial",
-                title.getFont().getStyle(),
-                50 // Swing on macOS will only display emojis for size 50 or less.
-        ));
         return title;
     }
 
     @Override
     public String getTitle() {
-        return "💡 Tag Query";
+        return "Tag Query";
     }
 }

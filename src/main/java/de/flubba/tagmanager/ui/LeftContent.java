@@ -3,10 +3,13 @@ package de.flubba.tagmanager.ui;
 import de.flubba.tagmanager.smartcard.CardAction;
 import de.flubba.tagmanager.smartcard.ReaderThread;
 import lombok.extern.slf4j.Slf4j;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SpringLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.List;
 
@@ -94,8 +97,15 @@ public class LeftContent extends JPanel {
     }
 
     private void addCardActionTabs() {
-        for (var tab : cardActionPanels) {
-            tabs.addTab(tab.getTitle(), tab);
+        var icons = List.of(
+            FontIcon.of(FontAwesomeSolid.ID_CARD, 16, new Color(76, 175, 80)),
+            FontIcon.of(FontAwesomeSolid.SEARCH, 16, new Color(33, 150, 243)),
+            FontIcon.of(FontAwesomeSolid.FLAG_CHECKERED, 16, new Color(255, 87, 34))
+        );
+
+        for (int i = 0; i < cardActionPanels.size(); i++) {
+            var tab = cardActionPanels.get(i);
+            tabs.addTab(tab.getTitle(), icons.get(i), tab);
         }
     }
 }

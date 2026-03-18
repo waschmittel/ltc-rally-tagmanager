@@ -1,9 +1,12 @@
 package de.flubba.tagmanager.ui;
 
 import lombok.extern.slf4j.Slf4j;
+import org.kordamp.ikonli.fontawesome6.FontAwesomeSolid;
+import org.kordamp.ikonli.swing.FontIcon;
 
 import javax.swing.JLabel;
 import javax.swing.SpringLayout;
+import java.awt.Color;
 import java.awt.Font;
 
 import static javax.swing.SpringLayout.EAST;
@@ -74,18 +77,14 @@ abstract class LapCountingTabLayout extends CardActionPanel {
     }
 
     private static JLabel buildTitle() {
-        JLabel title = new JLabel("🏃");
-        title.setFont(new Font(
-                "Arial",
-                title.getFont().getStyle(),
-                50 // Swing on macOS will only display emojis for size 50 or less.
-        ));
+        FontIcon icon = FontIcon.of(FontAwesomeSolid.FLAG_CHECKERED, 150, new Color(255, 87, 34));
+        JLabel title = new JLabel(icon);
         title.setHorizontalAlignment(CENTER);
         return title;
     }
 
     @Override
     public String getTitle() {
-        return "🏃‍ Lap Counting";
+        return "Lap Counting";
     }
 }
