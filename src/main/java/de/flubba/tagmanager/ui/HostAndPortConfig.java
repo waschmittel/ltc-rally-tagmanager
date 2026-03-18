@@ -4,17 +4,18 @@ import de.flubba.tagmanager.discovery.BackendDiscoveredEvent;
 import de.flubba.tagmanager.discovery.BackendDiscoveredEventListener;
 import de.flubba.tagmanager.discovery.BackendDiscoveredEventPublisher;
 import de.flubba.tagmanager.smartcard.ServerCommunication;
-import de.flubba.tagmanager.util.SimpleDocumentListener;
 
 import java.awt.Color;
+
+import static de.flubba.tagmanager.util.SingleCallbackDocumentListenerBuilder.onEveryEvent;
 
 public class HostAndPortConfig extends HostAndPortConfigLayout implements BackendDiscoveredEventListener {
     private static final Color INVALID_BACKGROUND = new Color(255, 160, 160);
 
     public HostAndPortConfig() {
         super();
-        hostField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateServerConfig);
-        portField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateServerConfig);
+        hostField.getDocument().addDocumentListener(onEveryEvent(this::updateServerConfig));
+        portField.getDocument().addDocumentListener(onEveryEvent(this::updateServerConfig));
         BackendDiscoveredEventPublisher.register(this);
         BackendDiscoveredEventPublisher.getLastBackendDiscoveredEvent().ifPresent(this::listen);
         updateServerConfig();
