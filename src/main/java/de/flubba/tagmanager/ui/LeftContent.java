@@ -70,10 +70,12 @@ public class LeftContent extends JPanel {
 
         var hostAndPortConfig = new HostAndPortConfig();
         var logSettings = new SettingsPanel();
+        var batteryDisplay = new BatteryDisplay();
 
         add(hostAndPortConfig);
         add(logSettings);
         add(tabs);
+        add(batteryDisplay);
 
         springLayout.putConstraint(NORTH, hostAndPortConfig, 0, NORTH, this);
         springLayout.putConstraint(EAST, hostAndPortConfig, 0, EAST, this);
@@ -86,7 +88,10 @@ public class LeftContent extends JPanel {
         springLayout.putConstraint(EAST, this, 0, EAST, hostAndPortConfig);
         springLayout.putConstraint(WEST, this, 0, WEST, tabs);
         springLayout.putConstraint(EAST, this, 0, EAST, tabs);
-        springLayout.putConstraint(SOUTH, this, 0, SOUTH, tabs);
+        springLayout.putConstraint(NORTH, batteryDisplay, 6, SOUTH, tabs);
+        springLayout.putConstraint(WEST, batteryDisplay, 0, WEST, this);
+        springLayout.putConstraint(EAST, batteryDisplay, 0, EAST, this);
+        springLayout.putConstraint(SOUTH, this, 0, SOUTH, batteryDisplay);
 
     }
 
