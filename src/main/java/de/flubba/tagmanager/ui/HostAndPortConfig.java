@@ -17,6 +17,7 @@ public class HostAndPortConfig extends HostAndPortConfigLayout implements Backen
         portField.getDocument().addDocumentListener((SimpleDocumentListener) this::updateServerConfig);
         BackendDiscoveredEventPublisher.register(this);
         BackendDiscoveredEventPublisher.getLastBackendDiscoveredEvent().ifPresent(this::listen);
+        updateServerConfig();
     }
 
     @Override
