@@ -1,7 +1,7 @@
 package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.smartcard.ServerCommunication;
-import jakarta.ws.rs.WebApplicationException;
+import io.avaje.http.client.HttpException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,8 +15,8 @@ public class TagAssignmentTab extends TagAssignmentTabLayout {
                 log.info(response);
                 numberSpinner.setValue(runnerNumber + 1L);
             });
-        } catch (WebApplicationException e) {
-            ServerCommunication.logWebApplicationException(e);
+        } catch (HttpException e) {
+            ServerCommunication.logHttpException(e);
         } catch (NumberFormatException e) {
             log.error("Cannot register tag without a valid runner number: {}", e.getMessage(), e);
         } catch (RuntimeException e) {

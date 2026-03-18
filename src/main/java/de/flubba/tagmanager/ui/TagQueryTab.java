@@ -1,7 +1,7 @@
 package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.smartcard.ServerCommunication;
-import jakarta.ws.rs.WebApplicationException;
+import io.avaje.http.client.HttpException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -18,8 +18,8 @@ public class TagQueryTab extends TagQueryTabLayout {
                 log.warn("No assignment found for tag {}", tagId);
             });
             tagIdLabel.setText(tagId);
-        } catch (WebApplicationException e) {
-            ServerCommunication.logWebApplicationException(e);
+        } catch (HttpException e) {
+            ServerCommunication.logHttpException(e);
         } catch (RuntimeException e) {
             log.error("Could not query tag: {}", e.getMessage(), e);
         }

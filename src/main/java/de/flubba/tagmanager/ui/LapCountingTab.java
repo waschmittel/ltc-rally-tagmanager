@@ -1,7 +1,7 @@
 package de.flubba.tagmanager.ui;
 
 import de.flubba.tagmanager.smartcard.ServerCommunication;
-import jakarta.ws.rs.WebApplicationException;
+import io.avaje.http.client.HttpException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,8 +15,8 @@ public class LapCountingTab extends LapCountingTabLayout {
                 runnerName.setText(runner.name());
                 runnerNumber.setText(runner.id().toString());
             });
-        } catch (WebApplicationException e) {
-            ServerCommunication.logWebApplicationException(e);
+        } catch (HttpException e) {
+            ServerCommunication.logHttpException(e);
         } catch (RuntimeException e) {
             log.error("Could not count lap: {}", e.getMessage(), e);
         }

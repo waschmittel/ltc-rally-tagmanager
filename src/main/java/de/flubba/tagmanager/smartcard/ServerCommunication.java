@@ -2,133 +2,127 @@ package de.flubba.tagmanager.smartcard;
 
 import de.flubba.tagmanager.RunnerDto;
 import de.flubba.tagmanager.TagAssignment;
-import jakarta.ws.rs.ClientErrorException;
-import jakarta.ws.rs.NotFoundException;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.client.Client;
-import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Entity;
-import jakarta.ws.rs.client.WebTarget;
+import io.avaje.http.client.HttpClient;
+import io.avaje.http.client.HttpException;
+import io.avaje.jsonb.Jsonb;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.time.Duration;
 import java.util.Optional;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static jakarta.ws.rs.core.Response.Status.CONFLICT;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.glassfish.jersey.client.ClientProperties.CONNECT_TIMEOUT;
-import static org.glassfish.jersey.client.ClientProperties.READ_TIMEOUT;
+import static java.net.HttpURLConnection.HTTP_CONFLICT;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 
 @Slf4j
 public final class ServerCommunication {
-    private static final Client CLIENT = ClientBuilder.newClient()
-            .property(CONNECT_TIMEOUT, 2000)
-            .property(READ_TIMEOUT, 2000);
-    private static WebTarget clientConfig = null;
+    private static final Jsonb JSONB = Jsonb.builder().build();
+    private static HttpClient client = null;
+    private static String baseUrl = null;
 
     public static void setHostAndPort(String hostname, Integer port) {
         if (hostname == null || port == null) {
-            clientConfig = null;
+            client = null;
+            baseUrl = null;
+            return;
         }
         //noinspection HttpUrlsUsage -- this is designed for auto-discovery in an airgapped network, so http is fine
-        clientConfig = CLIENT.target("http://%s:%s".formatted(hostname, port));
+        baseUrl = "http://%s:%s".formatted(hostname, port);
+        client = HttpClient.builder()
+                .baseUrl(baseUrl)
+                .connectionTimeout(Duration.ofMillis(2000))
+                .requestTimeout(Duration.ofMillis(2000))
+                .bodyAdapter(new io.avaje.http.client.JsonbBodyAdapter(JSONB))
+                .build();
     }
 
-    private static WebTarget buildWebTarget() {
-        if (clientConfig == null) {
+    private static HttpClient getClient() {
+        if (client == null) {
             throw new IllegalArgumentException("no valid host/port set");
         }
-        return clientConfig;
+        return client;
     }
 
     public static Optional<RunnerDto> countLap(String tagId) {
         try {
-            return Optional.of(
-                    ServerCommunication.buildWebTarget()
-                            .path("countLap")
-                            .queryParam("tagId", tagId)
-                            .request()
-                            .post(Entity.entity(String.class, APPLICATION_JSON), RunnerDto.class)
-            );
-        } catch (ClientErrorException clientErrorException) {
-            if (clientErrorException.getResponse().getStatus() == CONFLICT.getStatusCode()) {
-                log.warn("Lap too short. Full response: {}", clientErrorException.getResponse().readEntity(String.class));
+            var response = getClient()
+                    .request()
+                    .path("countLap")
+                    .queryParam("tagId", tagId)
+                    .POST()
+                    .bean(RunnerDto.class);
+            return Optional.of(response);
+        } catch (HttpException e) {
+            if (e.statusCode() == HTTP_CONFLICT) {
+                log.warn("Lap too short. Full response: {}", e.getMessage());
                 return Optional.empty();
             }
-            throw clientErrorException;
+            throw e;
         }
     }
 
     public static Optional<String> assignTag(String tagId, Long runnerNumber, boolean overwrite) {
         try {
-            return Optional.of(
-                    ServerCommunication.buildWebTarget()
-                            .path("setTagAssignment")
-                            .queryParam("tagId", tagId)
-                            .queryParam("runnerId", runnerNumber)
-                            .queryParam("overwrite", overwrite)
-                            .request()
-                            .post(Entity.entity(String.class, APPLICATION_JSON), String.class)
-            );
-        } catch (ClientErrorException clientErrorException) {
-            if (clientErrorException.getResponse().getStatus() == CONFLICT.getStatusCode()) {
-                log.error("Tag already assigned. Full response: {}", clientErrorException.getResponse().readEntity(String.class));
+            var response = getClient()
+                    .request()
+                    .path("setTagAssignment")
+                    .queryParam("tagId", tagId)
+                    .queryParam("runnerId", runnerNumber)
+                    .queryParam("overwrite", overwrite)
+                    .POST()
+                    .asString()
+                    .body();
+            return Optional.of(response);
+        } catch (HttpException e) {
+            if (e.statusCode() == HTTP_CONFLICT) {
+                log.error("Tag already assigned. Full response: {}", e.getMessage());
                 return Optional.empty();
             }
-            throw clientErrorException;
+            throw e;
         }
     }
 
     public static Optional<TagAssignment> getTagAssignment(String tagId) {
         try {
-            return Optional.of(
-                    ServerCommunication.buildWebTarget()
-                            .path("getTagAssignment")
-                            .queryParam("tagId", tagId)
-                            .request()
-                            .get(TagAssignment.class)
-            );
-        } catch (NotFoundException notFoundException) {
-            return Optional.empty();
+            var response = getClient()
+                    .request()
+                    .path("getTagAssignment")
+                    .queryParam("tagId", tagId)
+                    .GET()
+                    .bean(TagAssignment.class);
+            return Optional.of(response);
+        } catch (HttpException e) {
+            if (e.statusCode() == HTTP_NOT_FOUND) {
+                return Optional.empty();
+            }
+            throw e;
         }
     }
 
     public static boolean ping() {
         try {
-            log.debug("Pinging server {}:{}", clientConfig.getUri().getHost(), clientConfig.getUri().getPort());
-            var response = ServerCommunication.buildWebTarget()
-                    .path("ping")
+            log.debug("Pinging server {}", baseUrl);
+            getClient()
                     .request()
-                    .get();
-            return response.getStatus() == 200;
+                    .path("ping")
+                    .GET()
+                    .asVoid();
+            return true;
         } catch (RuntimeException e) {
             log.debug("Ping failed: {}", e.getMessage(), e);
             return false;
         }
     }
 
-    public static void logWebApplicationException(WebApplicationException e) {
+    public static void logHttpException(HttpException e) {
         log.error(getErrorMessageFrom(e), e);
     }
 
-    private static String getErrorMessageFrom(WebApplicationException e) {
-        Object entity = e.getResponse().getEntity();
-        if (entity instanceof InputStream inputStream) {
-            try {
-                String errorContent = IOUtils.toString(inputStream, UTF_8);
-                if (StringUtils.isBlank(errorContent)) {
-                    errorContent = "<no message>";
-                }
-                return ("Error: Result: %s: Content: %s".formatted(e.getMessage(), errorContent));
-            } catch (IOException ioException) {
-                return "Error: " + ioException.getMessage();
-            }
+    private static String getErrorMessageFrom(HttpException e) {
+        String errorContent = e.bodyAsString();
+        if (errorContent == null || errorContent.isBlank()) {
+            errorContent = "<no message>";
         }
-        return "Error: Could not get error message.";
+        return "Error: Status: %d, Content: %s".formatted(e.statusCode(), errorContent);
     }
 
     // this is just a helper class with static methods
