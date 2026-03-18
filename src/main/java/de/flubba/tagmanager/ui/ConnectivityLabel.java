@@ -18,9 +18,6 @@ class ConnectivityLabel extends JLabel {
     private static final Color DISCONNECTED_BACKGROUND = new Color(139, 0, 0);
     private static final Color DISCONNECTED_FOREGROUND = Color.RED;
 
-    private final Thread pingThread;
-    private final boolean running = true;
-
     ConnectivityLabel() {
         super("checking...");
         setHorizontalAlignment(CENTER);
@@ -28,13 +25,13 @@ class ConnectivityLabel extends JLabel {
         setFont(getFont().deriveFont(Font.BOLD, getFont().getSize() * 1.5f));
         setPreferredSize(new Dimension(100, 50));
 
-        pingThread = new Thread(this::runConnectivityCheck);
+        var pingThread = new Thread(this::runConnectivityCheck);
         pingThread.setDaemon(true);
         pingThread.start();
     }
 
     private void runConnectivityCheck() {
-        while (running) {
+        while (true) {
             checkConnectivity();
             try {
                 Thread.sleep(2000);
@@ -46,9 +43,9 @@ class ConnectivityLabel extends JLabel {
     }
 
     private void checkConnectivity() {
-        log.info("Checking connectivity...");
+        log.debug("Checking connectivity...");
         boolean connected = ServerCommunication.ping();
-        log.info("Connectivity check finished: {}", connected);
+        log.debug("Connectivity check finished: {}", connected);
         SwingUtilities.invokeLater(() -> {
             if (connected) { // TODO: only update things in the UI if the connection state changes
                 setText("connected");
