@@ -40,7 +40,7 @@ public class HostAndPortConfig extends HostAndPortConfigLayout implements Backen
     }
 
     private void updateServerConfig() {
-        String hostname = hostField.getText();
+        String hostname = hostField.getText().trim();
         Integer port = getPort();
         ServerCommunication.setHostAndPort(hostname, port);
         if (hostname != null && port != null) {
