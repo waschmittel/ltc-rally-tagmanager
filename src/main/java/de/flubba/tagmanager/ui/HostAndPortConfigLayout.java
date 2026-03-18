@@ -37,6 +37,7 @@ abstract class HostAndPortConfigLayout extends JPanel {
         var label = new javax.swing.JLabel("host/port:");
         portField.setPreferredSize(new Dimension(100, portField.getPreferredSize().height));
         portField.setMaximumSize(new Dimension(100, portField.getPreferredSize().height));
+        hostField.setMaximumSize(new Dimension(200, hostField.getPreferredSize().height));
 
         add(label);
         add(hostField);
