@@ -1,8 +1,6 @@
 package de.flubba.tagmanager.ui;
 
 import com.formdev.flatlaf.ui.FlatLineBorder;
-import de.flubba.tagmanager.smartcard.ServerCommunication;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -11,7 +9,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 
-@Slf4j
 class ConnectivityLabel extends JLabel {
     private static final Color CONNECTED_BACKGROUND = new Color(0, 100, 0);
     private static final Color CONNECTED_FOREGROUND = Color.GREEN;
@@ -25,29 +22,12 @@ class ConnectivityLabel extends JLabel {
         setFont(getFont().deriveFont(Font.BOLD, getFont().getSize() * 1.5f));
         setPreferredSize(new Dimension(100, 50));
 
-        var pingThread = new Thread(this::runConnectivityCheck);
-        pingThread.setDaemon(true);
-        pingThread.start();
+        ConnectivityMonitor.getInstance().addListener(this::updateConnectionState);
     }
 
-    private void runConnectivityCheck() {
-        while (true) {
-            checkConnectivity();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                break;
-            }
-        }
-    }
-
-    private void checkConnectivity() {
-        log.debug("Checking connectivity...");
-        boolean connected = ServerCommunication.ping();
-        log.debug("Connectivity check finished: {}", connected);
+    private void updateConnectionState(boolean connected) {
         SwingUtilities.invokeLater(() -> {
-            if (connected) { // TODO: only update things in the UI if the connection state changes
+            if (connected) {
                 setText("connected");
                 setBackground(CONNECTED_BACKGROUND);
                 setForeground(CONNECTED_FOREGROUND);
