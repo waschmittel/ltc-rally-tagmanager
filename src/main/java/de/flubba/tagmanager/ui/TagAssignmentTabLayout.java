@@ -22,14 +22,15 @@ import static javax.swing.SwingConstants.CENTER;
 @Slf4j
 abstract class TagAssignmentTabLayout extends CardActionPanel {
 
+    private final JLabel title = buildTitle();
     protected final JSpinner numberSpinner = new JSpinner(new SpinnerNumberModel(1L, 1L, 30000, 1L));
     protected final JCheckBox overwrite = new JCheckBox("overwrite existing assignment");
+
 
     TagAssignmentTabLayout() {
         var springLayout = new SpringLayout();
         setLayout(springLayout);
 
-        var title = buildTitle();
         var nextNumberLabel = new JLabel("next number to assign:");
         nextNumberLabel.setHorizontalAlignment(CENTER);
         nextNumberLabel.setVerticalAlignment(BOTTOM);

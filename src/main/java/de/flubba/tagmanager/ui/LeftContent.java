@@ -69,13 +69,15 @@ public class LeftContent extends JPanel {
         tabs.setSelectedIndex(2);
 
         var hostAndPortConfig = new HostAndPortConfig();
-        var logSettings = new SettingsPanel();
-        var batteryDisplay = new BatteryDisplay();
-
         add(hostAndPortConfig);
+
+        var logSettings = new SettingsPanel();
         add(logSettings);
-        add(tabs);
+
+        var batteryDisplay = new BatteryDisplay();
         add(batteryDisplay);
+
+        add(tabs);
 
         springLayout.putConstraint(NORTH, hostAndPortConfig, 0, NORTH, this);
         springLayout.putConstraint(EAST, hostAndPortConfig, 0, EAST, this);
@@ -103,9 +105,9 @@ public class LeftContent extends JPanel {
 
     private void addCardActionTabs() {
         var icons = List.of(
-            FontIcon.of(FontAwesomeSolid.ID_CARD, 16, new Color(76, 175, 80)),
-            FontIcon.of(FontAwesomeSolid.SEARCH, 16, new Color(33, 150, 243)),
-            FontIcon.of(FontAwesomeSolid.FLAG_CHECKERED, 16, new Color(255, 87, 34))
+                FontIcon.of(FontAwesomeSolid.ID_CARD, 16, new Color(76, 175, 80)),
+                FontIcon.of(FontAwesomeSolid.SEARCH, 16, new Color(33, 150, 243)),
+                FontIcon.of(FontAwesomeSolid.FLAG_CHECKERED, 16, new Color(255, 87, 34))
         );
 
         for (int i = 0; i < cardActionPanels.size(); i++) {

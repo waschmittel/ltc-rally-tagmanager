@@ -118,12 +118,12 @@ public class BatteryDisplay extends JPanel {
         private double chargeLevel = 0.0;
         private boolean isCharging = false;
 
-        public BatteryBar() {
+        BatteryBar() {
             setPreferredSize(new Dimension(BAR_WIDTH, BAR_HEIGHT));
             setOpaque(false);
         }
 
-        public void update(double chargeLevel, boolean isCharging) {
+        void update(double chargeLevel, boolean isCharging) {
             this.chargeLevel = chargeLevel;
             this.isCharging = isCharging;
             repaint();

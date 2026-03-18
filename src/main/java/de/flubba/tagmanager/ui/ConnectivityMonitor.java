@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Slf4j
-class ConnectivityMonitor {
+final class ConnectivityMonitor {
     private static final ConnectivityMonitor INSTANCE = new ConnectivityMonitor();
 
     private final List<Consumer<Boolean>> listeners = new ArrayList<>();
