@@ -1,7 +1,6 @@
 package de.flubba.tagmanager;
 
 import com.formdev.flatlaf.FlatIntelliJLaf;
-import de.flubba.tagmanager.discovery.MDNSListener;
 import de.flubba.tagmanager.ui.UI;
 import de.flubba.tagmanager.util.OsType;
 
@@ -15,7 +14,7 @@ public final class TagManager {
     private TagManager() {
     }
 
-    public static void main(String[] args) throws UnsupportedLookAndFeelException {
+    static void main(String[] args) throws UnsupportedLookAndFeelException {
         if (OsType.get() == MacOS) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("apple.awt.application.name", "LTC Rallye Tag Manager");
@@ -24,7 +23,6 @@ public final class TagManager {
 
         //Schedule a job for the event-dispatching thread:
         //creating and showing this application's GUI.
-        MDNSListener.listen();
         SwingUtilities.invokeLater(UI::createAndShow);
     }
 }

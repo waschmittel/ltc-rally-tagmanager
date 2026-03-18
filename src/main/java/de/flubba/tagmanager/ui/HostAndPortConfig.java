@@ -6,14 +6,19 @@ import de.flubba.tagmanager.discovery.BackendDiscoveredEventPublisher;
 import de.flubba.tagmanager.smartcard.ServerCommunication;
 
 import java.awt.Color;
+import java.util.prefs.Preferences;
 
 import static de.flubba.tagmanager.util.SingleCallbackDocumentListenerBuilder.onEveryEvent;
 
 public class HostAndPortConfig extends HostAndPortConfigLayout implements BackendDiscoveredEventListener {
     private static final Color INVALID_BACKGROUND = new Color(255, 160, 160);
+    private static final Preferences PREFS = Preferences.userNodeForPackage(HostAndPortConfig.class);
+    private static final String LAST_HOSTNAME_KEY = "lastHostname";
+    private static final String LAST_PORT_KEY = "lastPort";
 
     public HostAndPortConfig() {
         super();
+        loadSavedHostAndPort();
         hostField.getDocument().addDocumentListener(onEveryEvent(this::updateServerConfig));
         portField.getDocument().addDocumentListener(onEveryEvent(this::updateServerConfig));
         BackendDiscoveredEventPublisher.register(this);
@@ -27,8 +32,21 @@ public class HostAndPortConfig extends HostAndPortConfigLayout implements Backen
         hostField.setText(backendDiscoveredEvent.server());
     }
 
+    private void loadSavedHostAndPort() {
+        String savedHostname = PREFS.get(LAST_HOSTNAME_KEY, "localhost");
+        String savedPort = PREFS.get(LAST_PORT_KEY, "8080");
+        hostField.setText(savedHostname);
+        portField.setText(savedPort);
+    }
+
     private void updateServerConfig() {
-        ServerCommunication.setHostAndPort(hostField.getText(), getPort());
+        String hostname = hostField.getText();
+        Integer port = getPort();
+        ServerCommunication.setHostAndPort(hostname, port);
+        if (hostname != null && port != null) {
+            PREFS.put(LAST_HOSTNAME_KEY, hostname);
+            PREFS.put(LAST_PORT_KEY, port.toString());
+        }
     }
 
     private Integer getPort() {

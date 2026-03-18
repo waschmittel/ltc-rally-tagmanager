@@ -1,5 +1,6 @@
 package de.flubba.tagmanager.discovery;
 
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.jmdns.JmDNS;
@@ -16,14 +17,31 @@ import java.util.Enumeration;
 
 @Slf4j
 public final class MDNSListener {
+    private static JmDNS jmDNS;
+    private static final EventPublishingListener listener = new EventPublishingListener();
+
     private MDNSListener() {}
 
+    @Synchronized
     public static void listen() {
         try {
-            var jmDNS = JmDNS.create(getIPv4Address());
-            jmDNS.addServiceListener("_ltc-rallye._tcp.flubba.", new EventPublishingListener());
+            if (jmDNS == null) {
+                jmDNS = JmDNS.create(getIPv4Address());
+                jmDNS.addServiceListener("_ltc-rallye._tcp.flubba.", listener);
+            }
         } catch (IOException e) {
-            throw new UncheckedIOException("There is a problem with mDNS.", e);
+            throw new UncheckedIOException("There is a problem listening with jmDNS.", e);
+        }
+    }
+
+    @Synchronized
+    public static void stop() {
+        try {
+            if (jmDNS != null) {
+                jmDNS.close();
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException("There is a problem stopping jmDNS.", e);
         }
     }
 

@@ -66,7 +66,7 @@ public class LeftContent extends JPanel {
         tabs.setSelectedIndex(2);
 
         var hostAndPortConfig = new HostAndPortConfig();
-        var logSettings = new LogSettings();
+        var logSettings = new SettingsPanel();
 
         add(hostAndPortConfig);
         add(logSettings);
