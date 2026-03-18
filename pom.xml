@@ -22,17 +22,17 @@
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-http-client</artifactId>
-            <version>2.5</version>
+            <version>3.7</version>
         </dependency>
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-jsonb</artifactId>
-            <version>2.3</version>
+            <version>3.11</version>
         </dependency>
         <dependency>
             <groupId>io.avaje</groupId>
             <artifactId>avaje-jsonb-generator</artifactId>
-            <version>2.3</version>
+            <version>3.11</version>
             <scope>provided</scope>
         </dependency>
 
@@ -103,7 +103,7 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
-            <version>6.6.5</version>
+            <version>6.10.0</version>
         </dependency>
     </dependencies>
 
