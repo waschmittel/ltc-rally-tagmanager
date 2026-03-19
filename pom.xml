@@ -154,6 +154,10 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>de.flubba.tagmanager.TagManager</mainClass>
                                 </transformer>
+                                <!-- Merge META-INF/services files from all JARs so ServiceLoader can discover
+                                     icon packs (like ikonli-fontawesome6-pack) at runtime in the shaded JAR -->
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                             </transformers>
                         </configuration>
                     </execution>
