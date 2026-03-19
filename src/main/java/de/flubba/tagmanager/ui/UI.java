@@ -3,10 +3,13 @@ package de.flubba.tagmanager.ui;
 import de.flubba.tagmanager.ui.logtable.LogTable;
 import de.flubba.tagmanager.util.OsType;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JSplitPane;
 import javax.swing.SpringLayout;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static de.flubba.tagmanager.util.OsType.MacOS;
 import static javax.swing.JSplitPane.HORIZONTAL_SPLIT;
@@ -29,6 +32,7 @@ public final class UI {
 
     private static JFrame setupWindow() {
         JFrame frame = new JFrame("LTC Rallye Tag Manager");
+        setWindowIcon(frame);
         JMenuBar menubar = new JMenuBar();
         frame.setJMenuBar(menubar);
         if (OsType.get() == MacOS) {
@@ -37,6 +41,20 @@ public final class UI {
         }
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         return frame;
+    }
+
+    // only works for Linux/Windows - needs to be packaged as an application to get an icon in macOS
+    private static void setWindowIcon(JFrame frame) {
+        try {
+            BufferedImage icon;
+            var iconUrl = UI.class.getResource("/icon/app-icon.png");
+            if (iconUrl != null) {
+                icon = ImageIO.read(iconUrl);
+                frame.setIconImage(icon);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to load window icon: " + e.getMessage());
+        }
     }
 
     public static void layoutFrame(JFrame frame) {
