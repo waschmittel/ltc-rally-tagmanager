@@ -8,9 +8,17 @@ set -o pipefail # fail if a pipe fails
 mvn clean package
 
 cd target
+
+# Determine icon based on OS
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ICON_FILE="app-icon.icns"
+else
+    ICON_FILE="app-icon.png"
+fi
+
 jpackage \
     --name "LTC Rallye Tag Manager" \
-    --input . --icon ../res/icon/app-icon.icns \
+    --input . --icon "../res/icon/${ICON_FILE}" \
     --main-jar tagmanager.jar \
     --about-url 'https://github.com/waschmittel/ltc-rally-tagmanager' \
     --copyright '(C) 2025 Daniel Flassak' \
