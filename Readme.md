@@ -2,6 +2,8 @@
 
 **LTC Rally Tag Manager** is a desktop application for configuring and operating NFC/RFID tag readers used in charity running events. It works as a companion to the [LTC Rallye web application](https://github.com/waschmittel/ltc-rallye) to enable real-time lap tracking for sponsor-based running rallies.
 
+[![Lap Counting](docs/tagmanager_thumb.png)](ddocs/tagmanager.png)
+
 ## What is it?
 
 Tag Manager is designed for charity running events where runners complete laps tracked by NFC/RFID technology. This desktop application:
